@@ -40,7 +40,7 @@ public class SylStaticsModel {
      *  mean - 3xgm:
      *  control line:
      */
-    private String category;
+    private String type;
 
     /**
      * 良率值
