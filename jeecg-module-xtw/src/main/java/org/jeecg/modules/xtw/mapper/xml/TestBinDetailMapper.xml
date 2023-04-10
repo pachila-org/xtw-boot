@@ -2,4 +2,147 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.jeecg.modules.xtw.mapper.TestBinDetailMapper">
 
+    <resultMap id="subLotBinModel" type="org.jeecg.modules.xtw.model.SubLotBinModel" >
+        <result column="sub_lot" property="subLot" jdbcType="VARCHAR"/>
+        <result column="bin1" property="bin1" jdbcType="VARCHAR"/>
+        <result column="bin2" property="bin2" jdbcType="VARCHAR"/>
+        <result column="bin3" property="bin3" jdbcType="VARCHAR"/>
+        <result column="bin4" property="bin4" jdbcType="VARCHAR"/>
+        <result column="bin5" property="bin5" jdbcType="VARCHAR"/>
+        <result column="bin6" property="bin6" jdbcType="VARCHAR"/>
+        <result column="bin7" property="bin7" jdbcType="VARCHAR"/>
+        <result column="bin8" property="bin8" jdbcType="VARCHAR"/>
+        <result column="bin9" property="bin9" jdbcType="VARCHAR"/>
+        <result column="bin10" property="bin10" jdbcType="VARCHAR"/>
+        <result column="bin11" property="bin11" jdbcType="VARCHAR"/>
+        <result column="bin12" property="bin12" jdbcType="VARCHAR"/>
+        <result column="bin13" property="bin13" jdbcType="VARCHAR"/>
+        <result column="bin14" property="bin14" jdbcType="VARCHAR"/>
+        <result column="bin15" property="bin15" jdbcType="VARCHAR"/>
+        <result column="bin16" property="bin16" jdbcType="VARCHAR"/>
+        <result column="bin17" property="bin17" jdbcType="VARCHAR"/>
+        <result column="bin18" property="bin18" jdbcType="VARCHAR"/>
+        <result column="bin19" property="bin19" jdbcType="VARCHAR"/>
+        <result column="bin20" property="bin20" jdbcType="VARCHAR"/>
+        <result column="bin21" property="bin21" jdbcType="VARCHAR"/>
+        <result column="bin22" property="bin22" jdbcType="VARCHAR"/>
+        <result column="bin23" property="bin23" jdbcType="VARCHAR"/>
+        <result column="bin24" property="bin24" jdbcType="VARCHAR"/>
+        <result column="bin25" property="bin25" jdbcType="VARCHAR"/>
+        <result column="bin26" property="bin26" jdbcType="VARCHAR"/>
+        <result column="bin27" property="bin27" jdbcType="VARCHAR"/>
+        <result column="bin28" property="bin28" jdbcType="VARCHAR"/>
+        <result column="bin29" property="bin29" jdbcType="VARCHAR"/>
+        <result column="bin30" property="bin30" jdbcType="VARCHAR"/>
+        <result column="bin31" property="bin31" jdbcType="VARCHAR"/>
+        <result column="bin32" property="bin32" jdbcType="VARCHAR"/>
+        <result column="bin33" property="bin33" jdbcType="VARCHAR"/>
+        <result column="bin34" property="bin34" jdbcType="VARCHAR"/>
+        <result column="bin35" property="bin35" jdbcType="VARCHAR"/>
+        <result column="bin36" property="bin36" jdbcType="VARCHAR"/>
+        <result column="bin37" property="bin37" jdbcType="VARCHAR"/>
+        <result column="bin38" property="bin38" jdbcType="VARCHAR"/>
+        <result column="bin39" property="bin39" jdbcType="VARCHAR"/>
+        <result column="bin40" property="bin40" jdbcType="VARCHAR"/>
+        <result column="bin41" property="bin41" jdbcType="VARCHAR"/>
+        <result column="bin42" property="bin42" jdbcType="VARCHAR"/>
+        <result column="bin43" property="bin43" jdbcType="VARCHAR"/>
+        <result column="bin44" property="bin44" jdbcType="VARCHAR"/>
+        <result column="bin45" property="bin45" jdbcType="VARCHAR"/>
+        <result column="bin46" property="bin46" jdbcType="VARCHAR"/>
+        <result column="bin47" property="bin47" jdbcType="VARCHAR"/>
+        <result column="bin48" property="bin48" jdbcType="VARCHAR"/>
+        <result column="bin49" property="bin49" jdbcType="VARCHAR"/>
+        <result column="bin50" property="bin50" jdbcType="VARCHAR"/>
+        <result column="bin51" property="bin51" jdbcType="VARCHAR"/>
+        <result column="bin52" property="bin52" jdbcType="VARCHAR"/>
+        <result column="bin53" property="bin53" jdbcType="VARCHAR"/>
+        <result column="bin54" property="bin54" jdbcType="VARCHAR"/>
+        <result column="bin55" property="bin55" jdbcType="VARCHAR"/>
+        <result column="bin56" property="bin56" jdbcType="VARCHAR"/>
+        <result column="bin57" property="bin57" jdbcType="VARCHAR"/>
+        <result column="bin58" property="bin58" jdbcType="VARCHAR"/>
+        <result column="bin59" property="bin59" jdbcType="VARCHAR"/>
+        <result column="bin60" property="bin60" jdbcType="VARCHAR"/>
+        <result column="bin61" property="bin61" jdbcType="VARCHAR"/>
+        <result column="bin62" property="bin62" jdbcType="VARCHAR"/>
+        <result column="bin63" property="bin63" jdbcType="VARCHAR"/>
+        <result column="bin64" property="bin64" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="querySYLList" parameterType="String" resultMap="subLotBinModel">
+    select
+        xtr.sub_lot,
+        sum(bin1) as bin1,
+        sum(bin2) as bin2,
+        sum(bin3) as bin3,
+        sum(bin4) as bin4,
+        sum(bin5) as bin5,
+        sum(bin6) as bin6,
+        sum(bin7) as bin7,
+        sum(bin8) as bin8,
+        sum(bin9) as bin9,
+        sum(bin10) as bin10,
+        sum(bin11) as bin11,
+        sum(bin12) as bin12,
+        sum(bin13) as bin13,
+        sum(bin14) as bin14,
+        sum(bin15) as bin15,
+        sum(bin16) as bin16,
+        sum(bin17) as bin17,
+        sum(bin18) as bin18,
+        sum(bin19) as bin19,
+        sum(bin20) as bin20,
+        sum(bin21) as bin21,
+        sum(bin22) as bin22,
+        sum(bin23) as bin23,
+        sum(bin24) as bin24,
+        sum(bin25) as bin25,
+        sum(bin26) as bin26,
+        sum(bin27) as bin27,
+        sum(bin28) as bin28,
+        sum(bin29) as bin29,
+        sum(bin30) as bin30,
+        sum(bin31) as bin31,
+        sum(bin32) as bin32,
+        sum(bin33) as bin33,
+        sum(bin34) as bin34,
+        sum(bin35) as bin35,
+        sum(bin36) as bin36,
+        sum(bin37) as bin37,
+        sum(bin38) as bin38,
+        sum(bin39) as bin39,
+        sum(bin40) as bin40,
+        sum(bin41) as bin41,
+        sum(bin42) as bin42,
+        sum(bin43) as bin43,
+        sum(bin44) as bin44,
+        sum(bin45) as bin45,
+        sum(bin46) as bin46,
+        sum(bin47) as bin47,
+        sum(bin48) as bin48,
+        sum(bin49) as bin49,
+        sum(bin50) as bin50,
+        sum(bin51) as bin51,
+        sum(bin52) as bin52,
+        sum(bin53) as bin53,
+        sum(bin54) as bin54,
+        sum(bin55) as bin55,
+        sum(bin56) as bin56,
+        sum(bin57) as bin57,
+        sum(bin58) as bin58,
+        sum(bin59) as bin59,
+        sum(bin60) as bin60,
+        sum(bin61) as bin61,
+        sum(bin62) as bin62,
+        sum(bin63) as bin63,
+        sum(bin64) as bin64
+        from xtw_test_bin_detail xtb
+        left join xtw_test_record xtr on xtb.test_record_id = xtr.id
+        where
+            xtr.wafer_lot = #{waferLot}
+          and xtr.ic_name = #{icName}
+        group by xtb.test_record_id
+    </select>
+
 </mapper>

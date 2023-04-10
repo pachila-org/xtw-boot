@@ -48,9 +48,9 @@ public class TestBinDetailController extends JeecgController<TestBinDetail, ITes
 	@ApiOperation(value="xtw_test_bin_detail-分页列表查询", notes="xtw_test_bin_detail-分页列表查询")
 	@GetMapping(value = "/list")
 	public Result<IPage<TestBinDetail>> queryPageList(TestBinDetail testBinDetail,
-								   @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
-								   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
-								   HttpServletRequest req) {
+													  @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
+													  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
+													  HttpServletRequest req) {
 		QueryWrapper<TestBinDetail> queryWrapper = QueryGenerator.initQueryWrapper(testBinDetail, req.getParameterMap());
 		Page<TestBinDetail> page = new Page<TestBinDetail>(pageNo, pageSize);
 		IPage<TestBinDetail> pageList = testBinDetailService.page(page, queryWrapper);
@@ -161,9 +161,9 @@ public class TestBinDetailController extends JeecgController<TestBinDetail, ITes
 
 	@ApiOperation("获取良率统计数据")
 	@RequestMapping(value = "/sylstatistics", method = RequestMethod.POST)
-	public Result<?> getSylStatistics(String lot, String product) {
+	public Result<?> getSylStatistics(String waferLot, String icName) {
 		System.out.println("--------------------------------");
-		return this.testBinDetailService.findSYL(lot, product);
+		return Result.OK(this.testBinDetailService.findSYL(waferLot, icName));
 	}
 
 }

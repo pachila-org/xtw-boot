@@ -1,22 +1,17 @@
 package org.jeecg.modules.xtw.entity;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
 import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.jeecgframework.poi.excel.annotation.Excel;
-import org.jeecg.common.aspect.annotation.Dict;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @Description: xtw_test_bin_detail
@@ -304,4 +299,46 @@ public class TestBinDetail implements Serializable {
 	@Excel(name = "良率", width = 15)
     @ApiModelProperty(value = "良率")
     private BigDecimal syl;
+
+    public BigDecimal sumSYL() {
+        BigDecimal element = new BigDecimal(0);
+        BigDecimal denominator = new BigDecimal(0);
+
+        element = element.add(new BigDecimal(bin1)).add(new BigDecimal(bin2));
+        denominator = sumAllBin();
+
+        return element.divide(denominator);
+
+    }
+
+    public BigDecimal sumAllBin() {
+        BigDecimal result = new BigDecimal(0);
+        result = getBigDecimal(result, bin1, bin2, bin3, bin4, bin5, bin6, bin7, bin8, bin9, bin10);
+        result = getBigDecimal(result, bin11, bin12, bin13, bin14, bin15, bin16, bin17, bin18, bin19, bin20);
+        result = getBigDecimal(result, bin21, bin22, bin23, bin24, bin25, bin26, bin27, bin28, bin29, bin30);
+        result = getBigDecimal(result, bin31, bin32, bin33, bin34, bin35, bin36, bin37, bin38, bin39, bin40);
+        result = getBigDecimal(result, bin41, bin42, bin43, bin44, bin45, bin46, bin47, bin48, bin49, bin50);
+        result = getBigDecimal(result, bin51, bin52, bin53, bin54, bin55, bin56, bin57, bin58, bin59, bin60);
+        result = result.add(new BigDecimal(bin61));
+        result = result.add(new BigDecimal(bin62));
+        result = result.add(new BigDecimal(bin63));
+        result = result.add(new BigDecimal(bin64));
+        return result;
+    }
+
+    @NotNull
+    private BigDecimal getBigDecimal(BigDecimal result, String bin1, String bin2, String bin3, String bin4, String bin5,
+                                     String bin6, String bin7, String bin8, String bin9, String bin10) {
+        result = result.add(new BigDecimal(bin1));
+        result = result.add(new BigDecimal(bin2));
+        result = result.add(new BigDecimal(bin3));
+        result = result.add(new BigDecimal(bin4));
+        result = result.add(new BigDecimal(bin5));
+        result = result.add(new BigDecimal(bin6));
+        result = result.add(new BigDecimal(bin7));
+        result = result.add(new BigDecimal(bin8));
+        result = result.add(new BigDecimal(bin9));
+        result = result.add(new BigDecimal(bin10));
+        return result;
+    }
 }

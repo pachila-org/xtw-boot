@@ -1,8 +1,10 @@
 package org.jeecg.modules.xtw.service;
 
-import org.jeecg.common.api.vo.Result;
 import org.jeecg.modules.xtw.entity.TestBinDetail;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.jeecg.modules.xtw.model.SylStaticsModel;
+
+import java.util.List;
 
 /**
  * @Description: xtw_test_bin_detail
@@ -12,6 +14,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ITestBinDetailService extends IService<TestBinDetail> {
 
-    Result<?> findSYL(String lotStr, String product);
+    List<SylStaticsModel> findSYL(String waterLot, String icName);
 
 }
