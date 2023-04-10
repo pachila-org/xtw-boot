@@ -37,8 +37,8 @@ public class TestBinDetailServiceImpl extends ServiceImpl<TestBinDetailMapper, T
         for (int i = 0; i < binList.size(); i++) {
             SubLotBinModel bin = binList.get(i);
             SylStaticsModel model = new SylStaticsModel();
-            model.setWaferLot(waferLot);
-            model.setIcName(icName);
+            model.setWaferLot(bin.getWaferLot());
+            model.setIcName(bin.getIcName());
             model.setName(bin.getSubLot());
             model.setCategory(SylStaticsModel.YIELD);
             model.setValue(bin.sumSYL());
@@ -56,16 +56,16 @@ public class TestBinDetailServiceImpl extends ServiceImpl<TestBinDetailMapper, T
         for (int i = 0; i < binList.size(); i++) {
             SubLotBinModel bin = binList.get(i);
             SylStaticsModel modelMean = new SylStaticsModel();
-            modelMean.setWaferLot(waferLot);
-            modelMean.setIcName(icName);
+            modelMean.setWaferLot(bin.getWaferLot());
+            modelMean.setIcName(bin.getIcName());
             modelMean.setName(bin.getSubLot());
             modelMean.setCategory(SylStaticsModel.MEAN);
             modelMean.setValue(meanValue);
             modelList.add(modelMean);
 
             SylStaticsModel modelXGM = new SylStaticsModel();
-            modelXGM.setWaferLot(waferLot);
-            modelXGM.setIcName(icName);
+            modelXGM.setWaferLot(bin.getWaferLot());
+            modelXGM.setIcName(bin.getIcName());
             modelXGM.setName(bin.getSubLot());
             modelXGM.setCategory(SylStaticsModel.XIGEMA);
             modelXGM.setValue(xgmValue);

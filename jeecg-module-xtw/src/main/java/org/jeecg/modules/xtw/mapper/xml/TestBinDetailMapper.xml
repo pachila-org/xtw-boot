@@ -4,6 +4,8 @@
 
     <resultMap id="subLotBinModel" type="org.jeecg.modules.xtw.model.SubLotBinModel" >
         <result column="sub_lot" property="subLot" jdbcType="VARCHAR"/>
+        <result column="wafer_lot" property="waferLot" jdbcType="VARCHAR"/>
+        <result column="ic_name" property="icName" jdbcType="VARCHAR"/>
         <result column="bin1" property="bin1" jdbcType="VARCHAR"/>
         <result column="bin2" property="bin2" jdbcType="VARCHAR"/>
         <result column="bin3" property="bin3" jdbcType="VARCHAR"/>
@@ -72,6 +74,8 @@
 
     <select id="querySYLList" parameterType="String" resultMap="subLotBinModel">
     select
+        xtr.wafer_lot,
+        xtr.ic_name,
         xtr.sub_lot,
         sum(bin1) as bin1,
         sum(bin2) as bin2,
@@ -140,8 +144,13 @@
         from xtw_test_bin_detail xtb
         left join xtw_test_record xtr on xtb.test_record_id = xtr.id
         where
-            xtr.wafer_lot = #{waferLot}
+          1=1
+        <if test="waferLot != null and waferLot != ''">
+          and xtr.wafer_lot = #{waferLot}
+        </if>
+        <if test="icName != null and icName != ''">
           and xtr.ic_name = #{icName}
+        </if>
         group by xtb.test_record_id
     </select>
 

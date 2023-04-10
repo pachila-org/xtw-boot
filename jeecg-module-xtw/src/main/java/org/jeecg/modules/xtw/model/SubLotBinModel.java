@@ -16,6 +16,12 @@ public class SubLotBinModel {
     /**测试记录ID*/
     private String testRecordId;
 
+    /** 大批次 */
+    private String waferLot;
+
+    /** 产品名 */
+    private String icName;
+
     /** 小批次*/
     private String subLot;
 

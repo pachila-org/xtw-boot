@@ -1,8 +1,11 @@
 package org.jeecg.modules.xtw.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.jeecg.common.api.vo.JimuResult;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.modules.xtw.entity.TestBinDetail;
@@ -161,9 +164,11 @@ public class TestBinDetailController extends JeecgController<TestBinDetail, ITes
 
 	@ApiOperation("获取良率统计数据")
 	@RequestMapping(value = "/sylstatistics", method = RequestMethod.POST)
-	public Result<?> getSylStatistics(String waferLot, String icName) {
-		System.out.println("--------------------------------");
-		return Result.OK(this.testBinDetailService.findSYL(waferLot, icName));
+	public JimuResult<?> getSylStatistics(String waferLot, String icName) {
+		List sylList = this.testBinDetailService.findSYL(waferLot, icName);
+		JimuResult result = JimuResult.ok(sylList);
+		result.setCount(sylList.size());
+		return result;
 	}
 
 }
