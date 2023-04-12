@@ -78,7 +78,7 @@ public class TestBinDetailServiceImpl extends ServiceImpl<TestBinDetailMapper, T
             controlXGM.setWaferLot(bin.getWaferLot());
             controlXGM.setIcName(bin.getIcName());
             controlXGM.setName(bin.getSubLot());
-            controlXGM.setType(SylStaticsModel.XIGEMA);
+            controlXGM.setType(SylStaticsModel.CONTROL);
             controlXGM.setValue(controlValue);
             modelList.add(controlXGM);
         }

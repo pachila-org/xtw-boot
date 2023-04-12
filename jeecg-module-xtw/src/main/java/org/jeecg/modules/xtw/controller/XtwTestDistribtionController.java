@@ -1,8 +1,11 @@
 package org.jeecg.modules.xtw.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.jeecg.common.api.vo.JimuResult;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.modules.xtw.entity.XtwTestDistribtion;
@@ -29,7 +32,7 @@ import org.jeecg.common.aspect.annotation.AutoLog;
  */
 @Api(tags="xtw_test_distribtion")
 @RestController
-@RequestMapping("/xtw/xtwTestDistribtion")
+@RequestMapping("/xtw/distribtion")
 @Slf4j
 public class XtwTestDistribtionController extends JeecgController<XtwTestDistribtion, IXtwTestDistribtionService> {
 	@Autowired
@@ -158,5 +161,31 @@ public class XtwTestDistribtionController extends JeecgController<XtwTestDistrib
     public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
         return super.importExcel(request, response, XtwTestDistribtion.class);
     }
+
+//	@ApiOperation("获取某个批次某个项目的数据分布明细情况")
+//	@RequestMapping(value = "/detailDistribution", method = RequestMethod.POST)
+//	public JimuResult<?> detailDistribution(@RequestParam(name = "waferLot", required = true) String waferLot,
+//											@RequestParam(name = "icName", required = true) String icName,
+//											@RequestParam(name = "subLot", required = true) String subLog,
+//											@RequestParam(name = "testItem", required = true) String testItem) {
+//		List result = xtwTestDistribtionService.detailDistribution(waferLot, icName, subLog, testItem);
+//		JimuResult jimuResult = JimuResult.ok(result)
+//		jimuResult.setCount(result.size());
+//		return jimuResult;
+//	}
+
+	@ApiOperation("获取指定大批次与产品下的数据分布情况")
+	@RequestMapping(value = "/statistics", method = RequestMethod.POST)
+	public JimuResult<?> distributionStatistics(@RequestParam(name = "waferLot", required = true) String waferLot,
+											@RequestParam(name = "icName", required = true) String icName,
+											@RequestParam(name = "testItem", required = true) String testItem,
+												@RequestParam(name = "site", required = false) String site,
+												@RequestParam(name = "dateFrom", required = false) String dateFrom,
+												@RequestParam(name = "dateTo", required = false) String dateTo) {
+		List result = xtwTestDistribtionService.distributionStatistics(waferLot, icName, testItem, site, dateFrom, dateTo);
+		JimuResult jimuResult = JimuResult.ok(result);
+		jimuResult.setCount(result.size());
+		return jimuResult;
+	}
 
 }
