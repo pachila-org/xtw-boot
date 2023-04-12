@@ -6,6 +6,25 @@ import java.util.Arrays;
 
 public class MathUtils {
 
+    // 将maxValue 转化为一个最近的整数，如 99 转换成100， 101 转换成 200， 1001 转换成 1100， 10001 转换成 11000
+    public static Integer getNearestInteger(Integer maxValue) {
+        String str = maxValue.toString();
+        int length = str.length();
+        int first = Integer.parseInt(str.substring(0, 1));
+        int second = Integer.parseInt(str.substring(1, 2));
+        if (second < 5) {
+            second = 5;
+        } else {
+            second = 0;
+            first += 1;
+        }
+        String result = first + "" + second;
+        for (int i = 0; i < length - 2; i++) {
+            result += "0";
+        }
+        return Integer.parseInt(result);
+    }
+
     /**
      * 取指定2个数的中位数。俩个参数以BigDecimal型传入
      */
@@ -82,7 +101,14 @@ public class MathUtils {
         System.out.println(MathUtils.getQuartile(arr, 2));
         System.out.println(MathUtils.getQuartile(arr, 3));
 
-        
+
+        // 测试 getNearestInteger
+        System.out.println(MathUtils.getNearestInteger(99));
+        System.out.println(MathUtils.getNearestInteger(101));
+        System.out.println(MathUtils.getNearestInteger(1001));
+        System.out.println(MathUtils.getNearestInteger(1511));
+        System.out.println(MathUtils.getNearestInteger(6591));
+        System.out.println(MathUtils.getNearestInteger(10591));
 
     }
 }

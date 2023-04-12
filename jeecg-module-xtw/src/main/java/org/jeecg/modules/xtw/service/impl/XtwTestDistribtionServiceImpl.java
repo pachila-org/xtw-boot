@@ -1,7 +1,9 @@
 package org.jeecg.modules.xtw.service.impl;
 
 import org.jeecg.modules.xtw.entity.XtwTestDistribtion;
+import org.jeecg.modules.xtw.entity.XtwTestMetadata;
 import org.jeecg.modules.xtw.mapper.XtwTestDistribtionMapper;
+import org.jeecg.modules.xtw.mapper.XtwTestMetadataMapper;
 import org.jeecg.modules.xtw.model.DistributionStatisticsModel;
 import org.jeecg.modules.xtw.service.IXtwTestDistribtionService;
 import org.jeecg.modules.xtw.util.MathUtils;
@@ -23,6 +25,8 @@ import java.util.List;
 public class XtwTestDistribtionServiceImpl extends ServiceImpl<XtwTestDistribtionMapper, XtwTestDistribtion> implements IXtwTestDistribtionService {
     @Autowired
     private XtwTestDistribtionMapper testDistribtionMapper;
+    @Autowired
+    private XtwTestMetadataMapper testMetadataMapper;
 
     @Override
     public List distributionStatistics(String waferLot, String icName, String testItem, String site, String dateFrom, String dateTo) {
@@ -30,11 +34,27 @@ public class XtwTestDistribtionServiceImpl extends ServiceImpl<XtwTestDistribtio
         // 根据条件从数据库查询出相应的分布数据
         List<DistributionStatisticsModel> datas = testDistribtionMapper.distributionStatistics( waferLot, icName, testItem, site, dateFrom, dateTo);
 
+        // 去除datas集合中value为0的数据
+        datas.removeIf(data -> data.getValue() == 0);
+        // 获取datas集合value中最大的值
+        Integer maxValue = 0;
+        for (DistributionStatisticsModel data : datas) {
+            if (data.getValue() > maxValue) {
+                maxValue = data.getValue();
+            }
+        }
+        // 将maxValue 转化为一个最近的整数，如 99 转换成100， 101 转换成 200， 1001 转换成 1100
+        maxValue = MathUtils.getNearestInteger(maxValue);
+
         // 在数据集中插入标准的参照数据
-        // find uplimt data and downlimt data by testItem
-        // TODO
-        BigDecimal uplimit = new BigDecimal(0); // todo
-        BigDecimal downlimit = new BigDecimal(0); // todo
+        List<XtwTestMetadata> metadataList = testMetadataMapper.findUplimitAndDownlimitByTestItem(waferLot,icName,testItem);
+        XtwTestMetadata metadata = metadataList.get(0);
+        if (metadata == null) {
+            return datas;
+        }
+
+        BigDecimal uplimit = new BigDecimal(metadata.getUplimit());
+        BigDecimal downlimit = new BigDecimal(metadata.getDownlimit());
         BigDecimal mean = MathUtils.mean(uplimit, downlimit);
 
         // uplimit data insert
@@ -43,7 +63,7 @@ public class XtwTestDistribtionServiceImpl extends ServiceImpl<XtwTestDistribtio
         uplimitData.setIcName(icName);
         uplimitData.setTestItem(testItem);
         uplimitData.setName(uplimit);
-        uplimitData.setValue(100);
+        uplimitData.setValue(maxValue);
         datas.add(uplimitData);
 
         // downlimit data insert
@@ -52,7 +72,7 @@ public class XtwTestDistribtionServiceImpl extends ServiceImpl<XtwTestDistribtio
         downlimitData.setIcName(icName);
         downlimitData.setTestItem(testItem);
         downlimitData.setName(downlimit);
-        downlimitData.setValue(100);
+        downlimitData.setValue(maxValue);
         datas.add(downlimitData);
 
         // mean  data insert
@@ -61,7 +81,7 @@ public class XtwTestDistribtionServiceImpl extends ServiceImpl<XtwTestDistribtio
         meanData.setIcName(icName);
         meanData.setTestItem(testItem);
         meanData.setName(mean);
-        meanData.setValue(100);
+        meanData.setValue(maxValue);
         datas.add(meanData);
 
 
