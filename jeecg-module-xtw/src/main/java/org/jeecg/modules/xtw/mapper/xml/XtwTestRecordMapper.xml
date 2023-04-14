@@ -1,5 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.jeecg.modules.xtw.mapper.XtwTestRecordMapper">
+    <resultMap id="jimuDictModel" type="org.jeecg.modules.xtw.model.JimuDictModel" >
+        <result column="text" property="text" jdbcType="VARCHAR"/>
+        <result column="value" property="value" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="getWaferLotList" parameterType="String" resultMap="jimuDictModel">
+        SELECT
+            DISTINCT
+            wafer_lot AS text,
+            wafer_lot AS value
+        FROM xtw_test_record
+        WHERE wafer_lot IS NOT NULL
+        <if test="from != null and from != ''">
+            <![CDATA[ AND file_date >= #{from} ]]>
+        </if>
+        <if test="to != null and to != ''">
+            <![CDATA[ AND file_date <= #{to} ]]>
+        </if>
+    </select>
+
+    <select id="getICNameList" parameterType="String" resultMap="jimuDictModel">
+        SELECT
+            DISTINCT
+            ic_name AS text,
+            ic_name AS value
+        FROM xtw_test_record
+        WHERE ic_name IS NOT NULL
+        <if test="waferLot != null and waferLot != ''">
+            AND wafer_lot = #{waferLot}
+        </if>
+        <if test="from != null and from != ''">
+            <![CDATA[ AND file_date >= #{from} ]]>
+        </if>
+        <if test="to != null and to != ''">
+            <![CDATA[ AND file_date <= #{to} ]]>
+        </if>
+    </select>
 
 </mapper>

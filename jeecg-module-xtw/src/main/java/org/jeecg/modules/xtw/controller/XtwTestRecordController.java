@@ -1,11 +1,13 @@
 package org.jeecg.modules.xtw.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.modules.xtw.entity.XtwTestRecord;
+import org.jeecg.modules.xtw.model.JimuDictModel;
 import org.jeecg.modules.xtw.service.IXtwTestRecordService;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -29,7 +31,7 @@ import org.jeecg.common.aspect.annotation.AutoLog;
  */
 @Api(tags="xtw_test_record")
 @RestController
-@RequestMapping("/org.jeecg.modules.xtw/xtwTestRecord")
+@RequestMapping("/xtw/testRecord")
 @Slf4j
 public class XtwTestRecordController extends JeecgController<XtwTestRecord, IXtwTestRecordService> {
 	@Autowired
@@ -159,4 +161,23 @@ public class XtwTestRecordController extends JeecgController<XtwTestRecord, IXtw
         return super.importExcel(request, response, XtwTestRecord.class);
     }
 
+	/**
+	 * 获取大批次（waferLot）的下拉列表信息
+	 */
+	@ApiOperation(value = "获取大批次（waferLot）的下拉列表信息", notes = "获取大批次（waferLot）的下拉列表信息")
+	@RequestMapping(value = "/getWaferLotList", method = RequestMethod.POST)
+	public Result<?> getWaferLotList(@RequestParam(name="from",required=false) String from, @RequestParam(name="to",required=false) String to) {
+		List<JimuDictModel> waferLotList = xtwTestRecordService.getWaferLotList(from, to);
+		return Result.OK(waferLotList);
+	}
+
+	/**
+	 * 获取产品名（icName）的下拉列表信息
+	 */
+	@ApiOperation(value = "获取产品名（icName）的下拉列表信息", notes = "获取产品名（icName）的下拉列表信息")
+	@RequestMapping(value = "/getIcNameList", method = RequestMethod.POST)
+	public Result<?> getIcNameList(@RequestParam(name="waferLot",required=false) String waferLot, @RequestParam(name="from",required=false) String from, @RequestParam(name="to",required=false) String to) {
+		List<JimuDictModel> icNameList = xtwTestRecordService.getICNameList(waferLot, from, to);
+		return Result.OK(icNameList);
+	}
 }
