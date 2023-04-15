@@ -50,7 +50,7 @@ public class TestBinDetailServiceImpl extends ServiceImpl<TestBinDetailMapper, T
         // 计算mean-3xigema值
         BigDecimal meanValue3 = MathUtils.quartile(arr, 3);
         BigDecimal meanValue1 = MathUtils.quartile(arr, 1);
-        BigDecimal xgmValue = meanValue3.subtract(meanValue1).divide(new BigDecimal(1.35));
+        BigDecimal xgmValue = meanValue3.subtract(meanValue1).divide(new BigDecimal(1.35), 4, BigDecimal.ROUND_HALF_UP);
 
         // 计算control line值
         // TODO

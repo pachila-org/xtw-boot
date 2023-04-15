@@ -224,9 +224,9 @@ public class SubLotBinModel {
 
         element = element.add(new BigDecimal(bin1)).add(new BigDecimal(bin2));
         denominator = sumAllBin();
-        System.out.println(element);
-        System.out.println(denominator);
-        System.out.println(element.divide(denominator, 4, RoundingMode.HALF_UP));
+//        System.out.println(element);
+//        System.out.println(denominator);
+//        System.out.println(element.divide(denominator, 4, RoundingMode.HALF_UP));
         return element.divide(denominator, 4, RoundingMode.HALF_UP);
     }
 
