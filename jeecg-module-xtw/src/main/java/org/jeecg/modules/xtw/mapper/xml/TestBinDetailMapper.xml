@@ -151,6 +151,12 @@
         <if test="icName != null and icName != ''">
           and xtr.ic_name = #{icName}
         </if>
+        <if test="from != null and from != ''">
+            <![CDATA[ AND xtr.file_date >= #{from} ]]>
+        </if>
+        <if test="to != null and to != ''">
+            <![CDATA[ AND xtr.file_date <= #{to} ]]>
+        </if>
         group by xtb.test_record_id
     </select>
 

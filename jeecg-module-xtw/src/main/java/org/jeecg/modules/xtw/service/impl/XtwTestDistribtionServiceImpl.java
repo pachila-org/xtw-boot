@@ -48,10 +48,10 @@ public class XtwTestDistribtionServiceImpl extends ServiceImpl<XtwTestDistribtio
 
         // 在数据集中插入标准的参照数据
         List<XtwTestMetadata> metadataList = testMetadataMapper.findUplimitAndDownlimitByTestItem(waferLot,icName,testItem);
-        XtwTestMetadata metadata = metadataList.get(0);
-        if (metadata == null) {
+        if (metadataList == null || metadataList.size() == 0) {
             return datas;
         }
+        XtwTestMetadata metadata = metadataList.get(0);
 
         BigDecimal uplimit = new BigDecimal(metadata.getUplimit());
         BigDecimal downlimit = new BigDecimal(metadata.getDownlimit());

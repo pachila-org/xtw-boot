@@ -15,6 +15,7 @@ import java.util.List;
  */
 public interface TestBinDetailMapper extends BaseMapper<TestBinDetail> {
 
-    List<SubLotBinModel> querySYLList(@Param("waferLot") String waferLot, @Param("icName") String icName);
+    List<SubLotBinModel> querySYLList(@Param("waferLot") String waferLot, @Param("icName") String icName,
+                                      @Param("from") String from, @Param("to") String to);
 
 }

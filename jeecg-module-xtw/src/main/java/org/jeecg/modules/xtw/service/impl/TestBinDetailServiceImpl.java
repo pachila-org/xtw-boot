@@ -27,9 +27,9 @@ public class TestBinDetailServiceImpl extends ServiceImpl<TestBinDetailMapper, T
     private TestBinDetailMapper binDetailMapper;
 
     @Override
-    public List<SylStaticsModel> findSYL(String waferLot, String icName) {
+    public List<SylStaticsModel> findSYL(String waferLot, String icName, String from, String to) {
 
-        List<SubLotBinModel> binList = binDetailMapper.querySYLList(waferLot, icName);
+        List<SubLotBinModel> binList = binDetailMapper.querySYLList(waferLot, icName, from, to);
         List<SylStaticsModel> modelList = new ArrayList<SylStaticsModel>();
         BigDecimal [] arr = new BigDecimal[binList.size()];
 

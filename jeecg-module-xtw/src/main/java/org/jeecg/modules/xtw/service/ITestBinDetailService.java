@@ -14,6 +14,6 @@ import java.util.List;
  */
 public interface ITestBinDetailService extends IService<TestBinDetail> {
 
-    List<SylStaticsModel> findSYL(String waterLot, String icName);
+    List<SylStaticsModel> findSYL(String waterLot, String icName, String from, String to);
 
 }
