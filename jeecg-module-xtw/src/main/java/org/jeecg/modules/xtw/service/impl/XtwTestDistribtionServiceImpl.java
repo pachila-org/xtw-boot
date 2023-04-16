@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -84,7 +85,9 @@ public class XtwTestDistribtionServiceImpl extends ServiceImpl<XtwTestDistribtio
         meanData.setValue(maxValue);
         datas.add(meanData);
 
-
+        // Sort modelList by Name property in ascending order
+//        Collections.sort(datas, Comparator.comparing(DistributionStatisticsModel::getName));
+        datas.sort(Comparator.comparing(DistributionStatisticsModel::getName));
         return datas;
     }
 }

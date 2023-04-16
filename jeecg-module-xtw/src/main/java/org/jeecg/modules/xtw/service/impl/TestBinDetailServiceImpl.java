@@ -30,6 +30,8 @@ public class TestBinDetailServiceImpl extends ServiceImpl<TestBinDetailMapper, T
     public List<SylStaticsModel> findSYL(String waferLot, String icName, String from, String to) {
 
         List<SubLotBinModel> binList = binDetailMapper.querySYLList(waferLot, icName, from, to);
+        // 输出 binList 的大小
+        System.out.println("querySYLList list size: " + binList.size());
         List<SylStaticsModel> modelList = new ArrayList<SylStaticsModel>();
         BigDecimal [] arr = new BigDecimal[binList.size()];
 
@@ -82,6 +84,9 @@ public class TestBinDetailServiceImpl extends ServiceImpl<TestBinDetailMapper, T
             controlXGM.setValue(controlValue);
             modelList.add(controlXGM);
         }
+
+        // sort modellist by name property in ascending order
+        modelList.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
 
         return modelList;
     }
