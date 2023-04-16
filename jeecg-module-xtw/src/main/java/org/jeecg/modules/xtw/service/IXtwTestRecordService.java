@@ -32,4 +32,14 @@ public interface IXtwTestRecordService extends IService<XtwTestRecord> {
      */
     List<JimuDictModel> getICNameList(String waferLot, String from, String to);
 
+    /**
+     * 获取测试项列表
+     * @param waferLot 已经明确的大批次信息，可以为空
+     * @param icName 已经明确的IC_Name信息，可以为空
+     * @param from 某段时间内的大批次，时间开始日期 格式如 2021-01-01，可以为空
+     * @param to 某段时间内的大批次，时间结束日期 格式如 2021-01-01，可以为空
+     * @return
+     */
+    List<JimuDictModel> getTestItemList(String waferLot,String icName,String from,String to);
+
 }

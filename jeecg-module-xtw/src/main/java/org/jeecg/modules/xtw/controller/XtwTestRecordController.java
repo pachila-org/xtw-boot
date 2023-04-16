@@ -165,19 +165,29 @@ public class XtwTestRecordController extends JeecgController<XtwTestRecord, IXtw
 	 * 获取大批次（waferLot）的下拉列表信息
 	 */
 	@ApiOperation(value = "获取大批次（waferLot）的下拉列表信息", notes = "获取大批次（waferLot）的下拉列表信息")
-	@RequestMapping(value = "/getWaferLotList", method = RequestMethod.POST)
-	public Result<?> getWaferLotList(@RequestParam(name="from",required=false) String from, @RequestParam(name="to",required=false) String to) {
+	@RequestMapping(value = "/getWaferLotList", method = RequestMethod.GET)
+	public List<?> getWaferLotList(@RequestParam(name="from",required=false) String from, @RequestParam(name="to",required=false) String to) {
 		List<JimuDictModel> waferLotList = xtwTestRecordService.getWaferLotList(from, to);
-		return Result.OK(waferLotList);
+		return waferLotList;
 	}
 
 	/**
 	 * 获取产品名（icName）的下拉列表信息
 	 */
 	@ApiOperation(value = "获取产品名（icName）的下拉列表信息", notes = "获取产品名（icName）的下拉列表信息")
-	@RequestMapping(value = "/getIcNameList", method = RequestMethod.POST)
-	public Result<?> getIcNameList(@RequestParam(name="waferLot",required=false) String waferLot, @RequestParam(name="from",required=false) String from, @RequestParam(name="to",required=false) String to) {
+	@RequestMapping(value = "/getIcNameList", method = RequestMethod.GET)
+	public List<?> getIcNameList(@RequestParam(name="waferLot",required=false) String waferLot, @RequestParam(name="from",required=false) String from, @RequestParam(name="to",required=false) String to) {
 		List<JimuDictModel> icNameList = xtwTestRecordService.getICNameList(waferLot, from, to);
-		return Result.OK(icNameList);
+		return icNameList;
+	}
+
+	/**
+	 * 获取测试项目（testItem）的下拉列表信息
+	 */
+	@ApiOperation(value = "获取测试项目（testItem）的下拉列表信息", notes = "获取测试项目（testItem）的下拉列表信息")
+	@RequestMapping(value = "/getTestItemList", method = RequestMethod.GET)
+	public List<?> getTestItemList(@RequestParam(name="waferLot",required=false) String waferLot, @RequestParam(name="icName",required=false) String icName, @RequestParam(name="from",required=false) String from, @RequestParam(name="to",required=false) String to) {
+		List<JimuDictModel> testItemList = xtwTestRecordService.getTestItemList(waferLot, icName, from, to);
+		return testItemList;
 	}
 }

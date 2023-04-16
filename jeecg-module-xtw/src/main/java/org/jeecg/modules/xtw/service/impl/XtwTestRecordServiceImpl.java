@@ -32,4 +32,9 @@ public class XtwTestRecordServiceImpl extends ServiceImpl<XtwTestRecordMapper, X
     public List<JimuDictModel> getICNameList(String waferLot, String from, String to) {
         return testRecordMapper.getICNameList(waferLot, from, to);
     }
+
+    @Override
+    public List<JimuDictModel> getTestItemList(String waferLot,String icName,String from,String to) {
+        return testRecordMapper.getTestItemList(waferLot, icName, from, to);
+    }
 }

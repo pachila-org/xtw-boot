@@ -36,7 +36,8 @@ public class XtwTestDistribtionServiceImpl extends ServiceImpl<XtwTestDistribtio
         List<DistributionStatisticsModel> datas = testDistribtionMapper.distributionStatistics( waferLot, icName, testItem, site, dateFrom, dateTo);
 
         // 去除datas集合中value为0的数据
-        datas.removeIf(data -> data.getValue() == 0);
+//        datas.removeIf(data -> data.getValue() == 0);
+
         // 获取datas集合value中最大的值
         Integer maxValue = 0;
         for (DistributionStatisticsModel data : datas) {

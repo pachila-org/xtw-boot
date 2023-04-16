@@ -39,4 +39,19 @@
         </if>
     </select>
 
+    <select id="getTestItemList" parameterType="String" resultMap="jimuDictModel">
+        select
+            distinct xtd.test_item as text,
+            xtd.test_item as value
+        from
+            xtw_test_distribtion xtd
+        left join xtw_test_record xtr on
+            xtr.id = xtd.test_record_id
+        where
+            xtr.wafer_lot = #{waferLot}
+        and xtr.ic_name = #{icName}
+        <if test="from != null and from != ''">
+            <![CDATA[ AND file_date >= #{from} ]]>
+        </if>
+    </select>
 </mapper>

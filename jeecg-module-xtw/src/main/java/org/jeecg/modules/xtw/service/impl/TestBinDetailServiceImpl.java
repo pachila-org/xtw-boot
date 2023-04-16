@@ -88,6 +88,8 @@ public class TestBinDetailServiceImpl extends ServiceImpl<TestBinDetailMapper, T
         // sort modellist by name property in ascending order
         modelList.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
 
+        // 输出ModelList 的大小
+        System.out.println("modelList size: " + modelList.size());
         return modelList;
     }
 }

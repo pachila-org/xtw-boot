@@ -10,4 +10,15 @@ public class JimuDictModel {
 
     /** 字典值 */
     private String value;
+
+    /** 字典类型
+     *  tilte = text
+     */
+    public String getTitle() {
+        return text;
+    }
+
+    public void setTitle(String title) {
+        this.text = title;
+    }
 }

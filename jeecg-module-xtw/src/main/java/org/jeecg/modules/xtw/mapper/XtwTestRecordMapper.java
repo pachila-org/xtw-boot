@@ -19,4 +19,6 @@ public interface XtwTestRecordMapper extends BaseMapper<XtwTestRecord> {
 
     List<JimuDictModel>  getICNameList(@Param("waferLot") String waferLot, @Param("from") String from, @Param("to") String to);
 
+    // getTestItemList(waferLot, icName, from, to);
+    List<JimuDictModel>  getTestItemList(@Param("waferLot") String waferLot, @Param("icName") String icName, @Param("from") String from, @Param("to") String to);
 }
