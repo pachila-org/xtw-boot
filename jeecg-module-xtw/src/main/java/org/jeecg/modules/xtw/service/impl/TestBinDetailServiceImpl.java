@@ -56,7 +56,7 @@ public class TestBinDetailServiceImpl extends ServiceImpl<TestBinDetailMapper, T
 
         // 计算control line值
         // TODO
-        BigDecimal controlValue = new BigDecimal(0.5);
+        BigDecimal controlValue = new BigDecimal(0.9);
 
         for (int i = 0; i < binList.size(); i++) {
             SubLotBinModel bin = binList.get(i);

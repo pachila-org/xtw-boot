@@ -24,8 +24,8 @@ public class XtwTestRecordServiceImpl extends ServiceImpl<XtwTestRecordMapper, X
     private XtwTestRecordMapper testRecordMapper;
 
     @Override
-    public List<JimuDictModel> getWaferLotList(String from, String to) {
-        return testRecordMapper.getWaferLotList(from, to);
+    public List<JimuDictModel> getWaferLotList(String icName, String from, String to) {
+        return testRecordMapper.getWaferLotList(icName, from, to);
     }
 
     @Override

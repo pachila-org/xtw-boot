@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface XtwTestRecordMapper extends BaseMapper<XtwTestRecord> {
 
-    List<JimuDictModel> getWaferLotList(@Param("from") String from, @Param("to") String to);
+    List<JimuDictModel> getWaferLotList(@Param("icName") String icName, @Param("from") String from, @Param("to") String to);
 
     List<JimuDictModel>  getICNameList(@Param("waferLot") String waferLot, @Param("from") String from, @Param("to") String to);
 

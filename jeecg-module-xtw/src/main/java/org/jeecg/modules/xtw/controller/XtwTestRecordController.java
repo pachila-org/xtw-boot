@@ -166,8 +166,8 @@ public class XtwTestRecordController extends JeecgController<XtwTestRecord, IXtw
 	 */
 	@ApiOperation(value = "获取大批次（waferLot）的下拉列表信息", notes = "获取大批次（waferLot）的下拉列表信息")
 	@RequestMapping(value = "/getWaferLotList", method = RequestMethod.GET)
-	public List<?> getWaferLotList(@RequestParam(name="from",required=false) String from, @RequestParam(name="to",required=false) String to) {
-		List<JimuDictModel> waferLotList = xtwTestRecordService.getWaferLotList(from, to);
+	public List<?> getWaferLotList(@RequestParam(name="icName",required=false) String icName, @RequestParam(name="from",required=false) String from, @RequestParam(name="to",required=false) String to) {
+		List<JimuDictModel> waferLotList = xtwTestRecordService.getWaferLotList(icName, from, to);
 		return waferLotList;
 	}
 

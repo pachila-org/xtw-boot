@@ -16,11 +16,12 @@ public interface IXtwTestRecordService extends IService<XtwTestRecord> {
 
     /**
      * 获取wafer lot列表
+     * @param icName 已经明确的IC_Name信息，可以为空
      * @param from 某段时间内的大批次，时间开始日期 格式如 2021-01-01
      * @param to 某段时间内的大批次，时间结束日期 格式如 2021-01-01
      * @return
      */
-    List<JimuDictModel> getWaferLotList(String from, String to);
+    List<JimuDictModel> getWaferLotList(String icName, String from, String to);
 
 
     /**

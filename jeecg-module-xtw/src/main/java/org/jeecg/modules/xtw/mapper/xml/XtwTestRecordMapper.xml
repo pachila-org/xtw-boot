@@ -13,6 +13,9 @@
             wafer_lot AS value
         FROM xtw_test_record
         WHERE wafer_lot IS NOT NULL
+        <if test="icName != null and icName != ''">
+            AND ic_name = #{icName}
+        </if>
         <if test="from != null and from != ''">
             <![CDATA[ AND file_date >= #{from} ]]>
         </if>

@@ -73,7 +73,7 @@
     </resultMap>
 
     <select id="querySYLList" parameterType="String" resultMap="subLotBinModel">
-    select
+        select
         xtr.wafer_lot,
         xtr.ic_name,
         xtr.sub_lot,
