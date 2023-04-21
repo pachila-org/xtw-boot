@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -30,59 +32,74 @@ public class TestBinDetailServiceImpl extends ServiceImpl<TestBinDetailMapper, T
     public List<SylStaticsModel> findSYL(String waferLot, String icName, String from, String to) {
 
         List<SubLotBinModel> binList = binDetailMapper.querySYLList(waferLot, icName, from, to);
-        // 输出 binList 的大小
-        System.out.println("querySYLList list size: " + binList.size());
         List<SylStaticsModel> modelList = new ArrayList<SylStaticsModel>();
-        BigDecimal [] arr = new BigDecimal[binList.size()];
 
+        HashMap<String, List> map = new HashMap<String, List>();
         for (int i = 0; i < binList.size(); i++) {
             SubLotBinModel bin = binList.get(i);
-            SylStaticsModel model = new SylStaticsModel();
-            model.setWaferLot(bin.getWaferLot());
-            model.setIcName(bin.getIcName());
-            model.setName(bin.getSubLot());
-            model.setType(SylStaticsModel.YIELD);
-            model.setValue(bin.sumSYL());
-            modelList.add(model);
-            arr[i] = model.getValue();
+            String key = bin.getWaferLot() + "@" + bin.getIcName() + "@" + bin.getSubLot();
+            if (map.containsKey(key)) {
+                List<SubLotBinModel> oldModel = map.get(key);
+                oldModel.add(bin);
+            } else {
+                List<SubLotBinModel> model = new ArrayList<SubLotBinModel>();
+                model.add(bin);
+                map.put(key, model);
+            }
         }
 
-        // 计算mean值
-        BigDecimal meanValue = MathUtils.quartile(arr, 2);
-        // 计算mean-3xigema值
-        BigDecimal meanValue3 = MathUtils.quartile(arr, 3);
-        BigDecimal meanValue1 = MathUtils.quartile(arr, 1);
-        BigDecimal xgmValue = meanValue3.subtract(meanValue1).divide(new BigDecimal(1.35), 4, BigDecimal.ROUND_HALF_UP);
+        // 遍历map对象
+        for (String key : map.keySet()) {
+            List<SubLotBinModel> subLotBinModelList = map.get(key);
+            BigDecimal[] arrSyl = new BigDecimal[subLotBinModelList.size()];
 
-        // 计算control line值
-        // TODO
-        BigDecimal controlValue = new BigDecimal(0.9);
+            BigDecimal bin12 = new BigDecimal(0);
+            BigDecimal binAll = new BigDecimal(0);
 
-        for (int i = 0; i < binList.size(); i++) {
-            SubLotBinModel bin = binList.get(i);
+            for (int i = 0; i < subLotBinModelList.size(); i++) {
+                SubLotBinModel bin = subLotBinModelList.get(i);
+                arrSyl[i] = bin.sumSYL();
+                bin12 = new BigDecimal(bin.getBin1()).add(new BigDecimal(bin.getBin2()));
+                binAll = binAll.add(bin.sumAllBin());
+            }
+
+            BigDecimal yieldValue =  bin12.divide(binAll, 4, RoundingMode.HALF_UP);
+            BigDecimal meanValue = MathUtils.quartile(arrSyl, 2);
+            // 计算mean-3xigema值
+            BigDecimal meanValue3 = MathUtils.quartile(arrSyl, 3);
+            BigDecimal meanValue1 = MathUtils.quartile(arrSyl, 1);
+            BigDecimal xgmValue = meanValue3.subtract(meanValue1).divide(new BigDecimal(1.35), 4, BigDecimal.ROUND_HALF_UP);
+            // 计算control line值
+            BigDecimal controlValue = new BigDecimal(0.9);  // TODO
+
+            // Set yield value model
+            SylStaticsModel modelYield = new SylStaticsModel();
+            modelYield.setKey(key);
+            modelYield.setType(SylStaticsModel.YIELD);
+            modelYield.setValue(meanValue);
+            modelList.add(modelYield);
+
+            // Set mean value model
             SylStaticsModel modelMean = new SylStaticsModel();
-            modelMean.setWaferLot(bin.getWaferLot());
-            modelMean.setIcName(bin.getIcName());
-            modelMean.setName(bin.getSubLot());
+            modelMean.setKey(key);
             modelMean.setType(SylStaticsModel.MEAN);
             modelMean.setValue(meanValue);
             modelList.add(modelMean);
 
-            SylStaticsModel modelXGM = new SylStaticsModel();
-            modelXGM.setWaferLot(bin.getWaferLot());
-            modelXGM.setIcName(bin.getIcName());
-            modelXGM.setName(bin.getSubLot());
-            modelXGM.setType(SylStaticsModel.XIGEMA);
-            modelXGM.setValue(xgmValue);
-            modelList.add(modelXGM);
+            // set mean-3xigema value model
+            SylStaticsModel modelMean3 = new SylStaticsModel();
+            modelMean3.setKey(key);
+            modelMean3.setType(SylStaticsModel.XIGEMA);
+            modelMean3.setValue(xgmValue);
+            modelList.add(modelMean3);
 
-            SylStaticsModel controlXGM = new SylStaticsModel();
-            controlXGM.setWaferLot(bin.getWaferLot());
-            controlXGM.setIcName(bin.getIcName());
-            controlXGM.setName(bin.getSubLot());
-            controlXGM.setType(SylStaticsModel.CONTROL);
-            controlXGM.setValue(controlValue);
-            modelList.add(controlXGM);
+            // set control line value model
+            SylStaticsModel modelControl = new SylStaticsModel();
+            modelControl.setKey(key);
+            modelControl.setType(SylStaticsModel.CONTROL);
+            modelControl.setValue(controlValue);
+            modelList.add(modelControl);
+
         }
 
         // sort modellist by name property in ascending order

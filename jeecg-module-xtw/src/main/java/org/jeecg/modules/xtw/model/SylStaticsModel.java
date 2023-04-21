@@ -3,6 +3,8 @@ package org.jeecg.modules.xtw.model;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Description: 良率统计数据对象
@@ -46,5 +48,19 @@ public class SylStaticsModel {
      * 良率值
      */
     private BigDecimal value;
+
+    public String getKey() {
+        return waferLot + "@" + icName + "@" + name;
+    }
+
+    public void setKey(String key) {
+        String spitChar = "@";
+        String[] keys = key.split(spitChar);
+        if (keys.length >= 3) {
+            waferLot = keys[0];
+            icName = keys[1];
+            name = keys[2];
+        }
+    }
 
 }

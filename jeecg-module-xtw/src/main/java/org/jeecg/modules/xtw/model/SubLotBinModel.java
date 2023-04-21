@@ -25,6 +25,9 @@ public class SubLotBinModel {
     /** 小批次*/
     private String subLot;
 
+    /** Site */
+    private String site;
+
     /**bin1*/
     private String bin1;
 
