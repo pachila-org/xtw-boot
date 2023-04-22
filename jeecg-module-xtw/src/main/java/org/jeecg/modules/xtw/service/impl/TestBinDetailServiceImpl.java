@@ -6,6 +6,7 @@ import org.jeecg.modules.xtw.model.SubLotBinModel;
 import org.jeecg.modules.xtw.model.SylStaticsModel;
 import org.jeecg.modules.xtw.service.ITestBinDetailService;
 import org.jeecg.modules.xtw.util.MathUtils;
+import org.jeecg.modules.xtw.util.QuartileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,19 +35,27 @@ public class TestBinDetailServiceImpl extends ServiceImpl<TestBinDetailMapper, T
         List<SubLotBinModel> binList = binDetailMapper.querySYLList(waferLot, icName, from, to);
         List<SylStaticsModel> modelList = new ArrayList<SylStaticsModel>();
 
+        // 输出binlist 大小
+//        System.out.println("binList size: " + binList.size());
+
         HashMap<String, List> map = new HashMap<String, List>();
         for (int i = 0; i < binList.size(); i++) {
             SubLotBinModel bin = binList.get(i);
             String key = bin.getWaferLot() + "@" + bin.getIcName() + "@" + bin.getSubLot();
+            System.out.println("current key: " + key);
             if (map.containsKey(key)) {
                 List<SubLotBinModel> oldModel = map.get(key);
                 oldModel.add(bin);
+//                System.out.println("current key exist. and add model " + oldModel.size() );
             } else {
                 List<SubLotBinModel> model = new ArrayList<SubLotBinModel>();
                 model.add(bin);
                 map.put(key, model);
+//                System.out.println("current key new. and add model " + model.size() );
             }
         }
+        // 输出map的大小
+//        System.out.println("map size: " + map.size());
 
         // 遍历map对象
         for (String key : map.keySet()) {
@@ -59,24 +68,28 @@ public class TestBinDetailServiceImpl extends ServiceImpl<TestBinDetailMapper, T
             for (int i = 0; i < subLotBinModelList.size(); i++) {
                 SubLotBinModel bin = subLotBinModelList.get(i);
                 arrSyl[i] = bin.sumSYL();
-                bin12 = new BigDecimal(bin.getBin1()).add(new BigDecimal(bin.getBin2()));
+                bin12 = bin12.add(new BigDecimal(bin.getBin1()).add(new BigDecimal(bin.getBin2())));
                 binAll = binAll.add(bin.sumAllBin());
             }
 
             BigDecimal yieldValue =  bin12.divide(binAll, 4, RoundingMode.HALF_UP);
-            BigDecimal meanValue = MathUtils.quartile(arrSyl, 2);
+            BigDecimal meanValue = QuartileUtil.calculate(arrSyl, 2).setScale(4, BigDecimal.ROUND_HALF_UP);
             // 计算mean-3xigema值
-            BigDecimal meanValue3 = MathUtils.quartile(arrSyl, 3);
-            BigDecimal meanValue1 = MathUtils.quartile(arrSyl, 1);
-            BigDecimal xgmValue = meanValue3.subtract(meanValue1).divide(new BigDecimal(1.35), 4, BigDecimal.ROUND_HALF_UP);
+            BigDecimal meanValue3 = QuartileUtil.calculate(arrSyl, 3).setScale(4, BigDecimal.ROUND_HALF_UP);
+            BigDecimal meanValue1 = QuartileUtil.calculate(arrSyl, 1).setScale(4, BigDecimal.ROUND_HALF_UP);
+            BigDecimal xgmValue = meanValue3.subtract(meanValue1.divide(new BigDecimal(1.35), 4, BigDecimal.ROUND_HALF_UP));
             // 计算control line值
-            BigDecimal controlValue = new BigDecimal(0.9);  // TODO
+            BigDecimal controlValue = new BigDecimal("0.9");  // TODO
+
+            // 输出key， bin12， binAll， yieldValue， meanValue，meanValue3, meanValue1,  xgmValue， controlValue
+
+            System.out.println(key + " " + bin12 + " " + binAll + " " + yieldValue + " " + meanValue + " " + meanValue3 + " " + meanValue1 + " " + xgmValue + " " + controlValue);
 
             // Set yield value model
             SylStaticsModel modelYield = new SylStaticsModel();
             modelYield.setKey(key);
             modelYield.setType(SylStaticsModel.YIELD);
-            modelYield.setValue(meanValue);
+            modelYield.setValue(yieldValue);
             modelList.add(modelYield);
 
             // Set mean value model

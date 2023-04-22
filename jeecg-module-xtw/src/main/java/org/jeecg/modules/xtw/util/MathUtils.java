@@ -51,11 +51,11 @@ public class MathUtils {
     
         switch (length % 4) {
             case 0:
-                return arr[index - 1].add(arr[index]).divide(new BigDecimal("2.0"), 4, RoundingMode.HALF_DOWN);
+                return arr[index - 1].add(arr[index]).divide(new BigDecimal("2.0"), 4, RoundingMode.HALF_UP);
             case 1:
                 return arr[index];
             case 2:
-                return arr[index].add(arr[index + 1]).divide(new BigDecimal("2.0"),4, RoundingMode.HALF_DOWN);
+                return arr[index].add(arr[index + 1]).divide(new BigDecimal("2.0"),4, RoundingMode.HALF_UP);
             default:
                 BigDecimal weight1 = new BigDecimal("0.25");
                 BigDecimal weight2 = new BigDecimal("0.75");

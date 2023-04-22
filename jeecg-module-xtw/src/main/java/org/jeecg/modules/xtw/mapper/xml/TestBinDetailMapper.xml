@@ -159,7 +159,6 @@
         <if test="to != null and to != ''">
             <![CDATA[ AND xtr.file_date <= #{to} ]]>
         </if>
-        group by xtb.test_record_id
     </select>
 
 </mapper>
