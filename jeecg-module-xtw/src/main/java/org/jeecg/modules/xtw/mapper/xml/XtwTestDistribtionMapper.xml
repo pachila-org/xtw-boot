@@ -27,6 +27,9 @@
         <if test="site != null and site != ''">
             and xtd.site = #{site}
         </if>
+        <if test="testId != null and testId != ''">
+            and xtr.test_id = #{testId}
+        </if>
         <if test="site != null and site != ''">
             and xtd.site = #{site}
         </if>

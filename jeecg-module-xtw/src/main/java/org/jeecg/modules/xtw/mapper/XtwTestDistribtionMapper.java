@@ -18,6 +18,7 @@ public interface XtwTestDistribtionMapper extends BaseMapper<XtwTestDistribtion>
     List<DistributionStatisticsModel> distributionStatistics(@Param("waferLot") String waferLot,
                                                              @Param("icName") String icName,
                                                              @Param("testItem") String testItem,
+                                                             @Param("testId") String testId,
                                                              @Param("site") String site,
                                                              @Param("dateFrom") String dateFrom,
                                                              @Param("dateTo") String dateTo);

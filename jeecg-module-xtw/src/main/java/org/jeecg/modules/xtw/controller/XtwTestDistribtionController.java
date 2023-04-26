@@ -179,10 +179,11 @@ public class XtwTestDistribtionController extends JeecgController<XtwTestDistrib
 	public JimuResult<?> distributionStatistics(@RequestParam(name = "waferLot", required = true) String waferLot,
 											@RequestParam(name = "icName", required = true) String icName,
 											@RequestParam(name = "testItem", required = true) String testItem,
+												@RequestParam(name = "testId", required = false) String testId,
 												@RequestParam(name = "site", required = false) String site,
 												@RequestParam(name = "dateFrom", required = false) String dateFrom,
 												@RequestParam(name = "dateTo", required = false) String dateTo) {
-		List result = xtwTestDistribtionService.distributionStatistics(waferLot, icName, testItem, site, dateFrom, dateTo);
+		List result = xtwTestDistribtionService.distributionStatistics(waferLot, icName, testItem, testId, site, dateFrom, dateTo);
 		JimuResult jimuResult = JimuResult.ok(result);
 		jimuResult.setCount(result.size());
 		return jimuResult;

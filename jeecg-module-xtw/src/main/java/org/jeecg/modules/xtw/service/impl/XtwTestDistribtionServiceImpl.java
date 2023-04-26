@@ -30,10 +30,10 @@ public class XtwTestDistribtionServiceImpl extends ServiceImpl<XtwTestDistribtio
     private XtwTestMetadataMapper testMetadataMapper;
 
     @Override
-    public List distributionStatistics(String waferLot, String icName, String testItem, String site, String dateFrom, String dateTo) {
+    public List distributionStatistics(String waferLot, String icName, String testItem, String testId, String site, String dateFrom, String dateTo) {
 
         // 根据条件从数据库查询出相应的分布数据
-        List<DistributionStatisticsModel> datas = testDistribtionMapper.distributionStatistics( waferLot, icName, testItem, site, dateFrom, dateTo);
+        List<DistributionStatisticsModel> datas = testDistribtionMapper.distributionStatistics( waferLot, icName, testItem, testId, site, dateFrom, dateTo);
 
         // 去除datas集合中value为0的数据
 //        datas.removeIf(data -> data.getValue() == 0);
