@@ -3,8 +3,6 @@ package org.jeecg.modules.xtw.model;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @Description: 良率统计数据对象
@@ -13,10 +11,11 @@ import java.util.List;
  * @Version: V1.0
  */
 @Data
-public class SylStaticsModel {
+public class SylSublotModel {
     public static String YIELD = "yield";
     public static String MEAN = "robust mean";
-    public static String XIGEMA = "mean - 3xgm";
+    public static String PLUS_XIGEMA = "mean+3xgm";
+    public static String MINUS_XIGEMA = "mean-3xgm";
     public static String CONTROL = "control line";
 
 

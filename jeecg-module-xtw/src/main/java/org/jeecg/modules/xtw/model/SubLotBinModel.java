@@ -25,8 +25,8 @@ public class SubLotBinModel {
     /** 小批次*/
     private String subLot;
 
-    /** Site */
-    private String site;
+//    /** Site */
+//    private String site;
 
     /**bin1*/
     private String bin1;
@@ -227,9 +227,6 @@ public class SubLotBinModel {
 
         element = element.add(new BigDecimal(bin1)).add(new BigDecimal(bin2));
         denominator = sumAllBin();
-//        System.out.println(element);
-//        System.out.println(denominator);
-//        System.out.println(element.divide(denominator, 4, RoundingMode.HALF_UP));
         return element.divide(denominator, 4, RoundingMode.HALF_UP);
     }
 
