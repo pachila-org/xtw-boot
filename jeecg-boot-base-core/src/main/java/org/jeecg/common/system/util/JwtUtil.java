@@ -21,6 +21,7 @@ import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.constant.CommonConstant;
 import org.jeecg.common.constant.DataBaseConstant;
 import org.jeecg.common.constant.SymbolConstant;
+import org.jeecg.common.constant.TenantConstant;
 import org.jeecg.common.exception.JeecgBootException;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.common.system.vo.SysUserCacheInfo;
@@ -35,8 +36,8 @@ import org.jeecg.common.util.oConvertUtils;
  **/
 public class JwtUtil {
 
-	/**Token有效期为1小时（Token在reids中缓存时间为两倍）*/
-	public static final long EXPIRE_TIME = 60 * 60 * 1000;
+	/**Token有效期为24小时（Token在reids中缓存时间乘以2）*/
+	public static final long EXPIRE_TIME = 12 * 60 * 60 * 1000;
 	static final String WELL_NUMBER = SymbolConstant.WELL_NUMBER + SymbolConstant.LEFT_CURLY_BRACKET;
 
     /**
@@ -50,6 +51,7 @@ public class JwtUtil {
 		// issues/I4YH95浏览器显示乱码问题
 		httpServletResponse.setHeader("Content-type", "text/html;charset=UTF-8");
         Result jsonResult = new Result(code, errorMsg);
+		jsonResult.setSuccess(false);
         OutputStream os = null;
         try {
             os = httpServletResponse.getOutputStream();
@@ -233,12 +235,8 @@ public class JwtUtil {
 			returnValue = "1";
 		}
 		//update-begin-author:taoyan date:20210330 for:多租户ID作为系统变量
-		else if (key.equals(DataBaseConstant.TENANT_ID) || key.toLowerCase().equals(DataBaseConstant.TENANT_ID_TABLE)){
-			returnValue = sysUser.getRelTenantIds();
-            boolean flag = returnValue != null && returnValue.indexOf(SymbolConstant.COMMA) > 0;
-            if(oConvertUtils.isEmpty(returnValue) || flag){
-				returnValue = SpringContextUtils.getHttpServletRequest().getHeader(CommonConstant.TENANT_ID);
-			}
+		else if (key.equals(TenantConstant.TENANT_ID) || key.toLowerCase().equals(TenantConstant.TENANT_ID_TABLE)){
+			returnValue = SpringContextUtils.getHttpServletRequest().getHeader(CommonConstant.TENANT_ID);
 		}
 		//update-end-author:taoyan date:20210330 for:多租户ID作为系统变量
 		if(returnValue!=null){returnValue = returnValue + moshi;}
