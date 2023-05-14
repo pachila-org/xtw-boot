@@ -1,0 +1,21 @@
+------DaTa Source---------
+SYL_API  SYL_API
+{{ domainURL }}/xtw/testbin/sylstatistics?waferLot=${waferLot}&icName=${icName}&from=${from}&to=${to}
+
+------  JS  ---------
+function init(){
+  // 加载下拉框数据
+  $http.metaGet('/jeecg-boot/xtw/testRecord/getWaferLotList').then(res=>{
+    let options =  res.data;
+    this.updateSelectOptions('SYL_API', 'waferLot', options)
+  })
+
+ this.onSearchFormChange('SYL_API', 'waferLot', (value)=>{
+    let params = {params: {waferLot: value}}
+    $http.metaGet('/jeecg-boot/xtw/testRecord/getIcNameList', params ).then(res=>{
+        let options =  res.data;
+        this.updateSelectOptions('SYL_API', 'icName', options)
+    })
+})
+}
+

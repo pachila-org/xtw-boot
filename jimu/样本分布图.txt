@@ -1,0 +1,39 @@
+------DaTa Source---------
+distribution_api  distribution_api
+{{ domainURL }}/xtw/distribtion/statistics?waferLot=${waferLot}&icName=${icName}&testItem=${testItem}&testId=${testId}&site=${site}
+
+
+------  JS  ---------
+
+function init(){
+  let icValue = ''
+  // 加载下拉框数据
+  let today = new Date();
+  let threeDaysAgo = new Date(today);
+  threeDaysAgo.setDate(today.getDate() - 31);
+   let formattedDate = threeDaysAgo.toISOString().split('T')[0];
+
+  let paramsLot = {params: {from: formattedDate}}
+  $http.metaGet('/jeecg-boot/xtw/testRecord/getIcNameList', paramsLot).then(res=>{
+    let options =  res.data;
+    this.updateSelectOptions('distribution_api', 'icName', options)
+  })
+
+ this.onSearchFormChange('distribution_api', 'icName', (value)=>{
+      let params = {params: {icName: value}}
+      icValue = value
+      $http.metaGet('/jeecg-boot/xtw/testRecord/getWaferLotList', params ).then(res=>{
+          let options =  res.data;
+          this.updateSelectOptions('distribution_api', 'waferLot', options)
+      })
+  })
+
+ this.onSearchFormChange('distribution_api', 'waferLot', (value)=>{
+      let params = {params: {waferLot: value, icName: icValue}}
+      $http.metaGet('/jeecg-boot/xtw/testRecord/getTestItemList', params ).then(res=>{
+          let options =  res.data;
+          this.updateSelectOptions('distribution_api', 'testItem', options)
+      })
+  })
+
+}

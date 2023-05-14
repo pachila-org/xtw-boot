@@ -1,0 +1,54 @@
+------DaTa Source---------
+distribute_detail  样本数据分布
+
+select
+	xtr.wafer_lot ,
+	xtr.ic_name ,
+	xtr.sub_lot,
+	xtd.site,
+	xtd.test_item,
+        ROUND(xtd.section_rate * 100, 1) as section_rate,
+	xtd.section_min,
+	xtd.section_max,
+	xtd.sample_amount
+from
+	xtw_test_distribtion xtd
+left join xtw_test_record xtr on
+	xtd.test_record_id = xtr.id
+order by xtr.sub_lot asc, xtd.site asc, xtd.section_rate asc
+
+-----------JS-----------------
+function init(){
+  let icValue = ''
+  let today = new Date();
+  let threeDaysAgo = new Date(today);
+  threeDaysAgo.setDate(today.getDate() - 31);
+   let formattedDate = threeDaysAgo.toISOString().split('T')[0];
+  let paramsFrom = {params: {from: formattedDate }}
+
+
+  // 加载下拉框数据
+  $http.metaGet('/jeecg-boot/xtw/testRecord/getIcNameList', paramsFrom).then(res=>{
+    let options =  res.data;
+    this.updateSelectOptions('distribute_detail', 'ic_name', options)
+  })
+
+ this.onSearchFormChange('distribute_detail', 'ic_name', (value)=>{
+      let params = {params: {icName: value}}
+      icValue = value
+      $http.metaGet('/jeecg-boot/xtw/testRecord/getWaferLotList', params ).then(res=>{
+          let options =  res.data;
+          this.updateSelectOptions('distribute_detail', 'wafer_lot', options)
+      })
+  })
+
+ this.onSearchFormChange('distribute_detail', 'wafer_lot', (value)=>{
+      let params = {params: {waferLot: value , icName: icValue}}
+      $http.metaGet('/jeecg-boot/xtw/testRecord/getTestItemList', params ).then(res=>{
+          let options =  res.data;
+          this.updateSelectOptions('distribute_detail', 'test_item', options)
+      })
+  })
+
+}
+
