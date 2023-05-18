@@ -174,6 +174,18 @@ public class TestBinDetailController extends JeecgController<TestBinDetail, ITes
         return result;
     }
 
+    @ApiOperation("获取良率统计数据的清单显示")
+    @RequestMapping(value = "/sylstatistics4list", method = RequestMethod.POST)
+    public JimuResult<?> getSylStatistics4List(@RequestParam(name = "waferLot", required = true) String waferLot,
+                                          @RequestParam(name = "icName", required = true) String icName,
+                                          @RequestParam(name = "from", required = false) String from,
+                                          @RequestParam(name = "to", required = false) String to) {
+        List sylList = this.testBinDetailService.findSYL4List(waferLot, icName, from, to);
+        JimuResult result = JimuResult.ok(sylList);
+        result.setCount(sylList.size());
+        return result;
+    }
+
     @ApiOperation("获取良率统计数据")
     @RequestMapping(value = "/syl_icname", method = RequestMethod.POST)
     public JimuResult<?> getSylStatisticsByIcName(@RequestParam(name = "icName", required = true) String icName,
@@ -184,5 +196,29 @@ public class TestBinDetailController extends JeecgController<TestBinDetail, ITes
         result.setCount(sylList.size());
         return result;
     }
+
+    @ApiOperation("获取良率统计数据的列表显示")
+    @RequestMapping(value = "/syl_icname4list", method = RequestMethod.POST)
+    public JimuResult<?> getSylStatisticsByIcName4List(@RequestParam(name = "icName", required = true) String icName,
+                                                  @RequestParam(name = "from", required = false) String from,
+                                                  @RequestParam(name = "to", required = false) String to) {
+        List sylList = this.testBinDetailService.findSYL4List(icName, from, to);
+        JimuResult result = JimuResult.ok(sylList);
+        result.setCount(sylList.size());
+        return result;
+    }
+
+    @ApiOperation("获取每个测试批次的BIN统计数据")
+    @RequestMapping(value = "/binreport", method = RequestMethod.POST)
+    public JimuResult<?> getBinDatas(@RequestParam(name = "waferLot", required = false) String waferLot,
+                                          @RequestParam(name = "icName", required = false) String icName,
+                                          @RequestParam(name = "from", required = false) String from,
+                                          @RequestParam(name = "to", required = false) String to) {
+        List sylList = this.testBinDetailService.findSYL(waferLot, icName, from, to);
+        JimuResult result = JimuResult.ok(sylList);
+        result.setCount(sylList.size());
+        return result;
+    }
+
 
 }

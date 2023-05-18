@@ -2,9 +2,7 @@ package org.jeecg.modules.xtw.service.impl;
 
 import org.jeecg.modules.xtw.entity.TestBinDetail;
 import org.jeecg.modules.xtw.mapper.TestBinDetailMapper;
-import org.jeecg.modules.xtw.model.SubLotBinModel;
-import org.jeecg.modules.xtw.model.SylSublotModel;
-import org.jeecg.modules.xtw.model.SylWaferlotModel;
+import org.jeecg.modules.xtw.model.*;
 import org.jeecg.modules.xtw.service.ITestBinDetailService;
 import org.jeecg.modules.xtw.util.QuartileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +12,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description: xtw_test_bin_detail
@@ -115,6 +115,51 @@ public class TestBinDetailServiceImpl extends ServiceImpl<TestBinDetailMapper, T
     }
 
     @Override
+    public List<SylModel> findSYL4List(String waferLot, String icName, String from, String to) {
+        List<SylSublotModel> modelList = findSYL(waferLot, icName, from, to);
+        List<SylModel> sylModelList = new ArrayList<SylModel>();
+
+        Map<String, List<SylSublotModel>> map = new HashMap<String, List<SylSublotModel>>();
+        // 将modellist转换为map
+        for (SylSublotModel model : modelList) {
+            String key = model.getKey();
+            if (map.containsKey(key)) {
+                map.get(key).add(model);
+            } else {
+                List<SylSublotModel> list = new ArrayList<SylSublotModel>();
+                list.add(model);
+                map.put(key, list);
+            }
+        }
+
+        // 将map转换为sylModelList , 一个key转换成一个syLmodel
+        for (String key : map.keySet()) {
+            List<SylSublotModel> list = map.get(key);
+            SylModel sylModel = new SylModel();
+            sylModel.setIcName(list.get(0).getIcName());
+            sylModel.setWaferLot(list.get(0).getWaferLot());
+            sylModel.setSubLot(list.get(0).getName());
+
+            // 遍历list，将list中的model中的value 根据 type，转换为sylmodel中的属性
+            for (SylSublotModel model : list) {
+                if (model.getType().equals(SylSublotModel.MEAN)) {
+                    sylModel.setRobustMean(model.getValue());
+                } else if (model.getType().equals(SylSublotModel.PLUS_XIGEMA)) {
+                    sylModel.setMeanPlus3xgm(model.getValue());
+                } else if (model.getType().equals(SylSublotModel.MINUS_XIGEMA)) {
+                    sylModel.setMeanMinus3xgm(model.getValue());
+                } else if (model.getType().equals(SylSublotModel.CONTROL)) {
+                    sylModel.setControlLine(model.getValue());
+                } else if (model.getType().equals(SylSublotModel.YIELD)) {
+                    sylModel.setYield(model.getValue());
+                }
+            }
+            sylModelList.add(sylModel);
+        }
+        return sylModelList;
+    }
+
+    @Override
     public List<SylWaferlotModel> findSYL(String icName, String from, String to) {
 
         List<SubLotBinModel> binList = binDetailMapper.querySYLListNew(icName, from, to);
@@ -191,5 +236,55 @@ public class TestBinDetailServiceImpl extends ServiceImpl<TestBinDetailMapper, T
         // 输出ModelList 的大小
         System.out.println("modelList size: " + modelList.size());
         return modelList;
+    }
+
+    @Override
+    public List<SylModel> findSYL4List(String icName, String from, String to) {
+        List<SylWaferlotModel> modelList = findSYL(icName, from, to);
+        List<SylModel> sylModelList = new ArrayList<SylModel>();
+
+        Map<String, List<SylWaferlotModel>> map = new HashMap<String, List<SylWaferlotModel>>();
+        // 将modellist转换为map
+        for (SylWaferlotModel model : modelList) {
+            String key = model.getKey();
+            if (map.containsKey(key)) {
+                map.get(key).add(model);
+            } else {
+                List<SylWaferlotModel> list = new ArrayList<SylWaferlotModel>();
+                list.add(model);
+                map.put(key, list);
+            }
+        }
+
+        // 将map转换为sylModelList , 一个key转换成一个syLmodel
+        for (String key : map.keySet()) {
+            List<SylWaferlotModel> list = map.get(key);
+            SylModel sylModel = new SylModel();
+            sylModel.setIcName(list.get(0).getIcName());
+            sylModel.setWaferLot(list.get(0).getName());
+
+            // 遍历list，将list中的model中的value 根据 type，转换为sylmodel中的属性
+            for (SylWaferlotModel model : list) {
+                if (model.getType().equals(SylWaferlotModel.MEAN)) {
+                    sylModel.setRobustMean(model.getValue());
+                } else if (model.getType().equals(SylWaferlotModel.PLUS_XIGEMA)) {
+                    sylModel.setMeanPlus3xgm(model.getValue());
+                } else if (model.getType().equals(SylWaferlotModel.MINUS_XIGEMA)) {
+                    sylModel.setMeanMinus3xgm(model.getValue());
+                } else if (model.getType().equals(SylWaferlotModel.CONTROL)) {
+                    sylModel.setControlLine(model.getValue());
+                } else if (model.getType().equals(SylWaferlotModel.YIELD)) {
+                    sylModel.setYield(model.getValue());
+                }
+            }
+            sylModelList.add(sylModel);
+        }
+        return sylModelList;
+    }
+
+    @Override
+    public List<BinDataModel> getBinDatas(String waterLot, String icName, String from, String to) {
+        List<BinDataModel> binList = binDetailMapper.queryBinDatas(waterLot, icName, from, to);
+        return binList;
     }
 }

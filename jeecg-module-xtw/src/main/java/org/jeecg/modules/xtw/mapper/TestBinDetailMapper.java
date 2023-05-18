@@ -3,6 +3,7 @@ package org.jeecg.modules.xtw.mapper;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.jeecg.modules.xtw.entity.TestBinDetail;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.jeecg.modules.xtw.model.BinDataModel;
 import org.jeecg.modules.xtw.model.SubLotBinModel;
 
 import java.util.List;
@@ -19,4 +20,7 @@ public interface TestBinDetailMapper extends BaseMapper<TestBinDetail> {
                                       @Param("from") String from, @Param("to") String to);
 
     List<SubLotBinModel> querySYLListNew(@Param("icName") String icName, @Param("from") String from, @Param("to") String to);
+
+    List<BinDataModel> queryBinDatas(@Param("waferLot") String waferLot, @Param("icName") String icName,
+                                   @Param("from") String from, @Param("to") String to);
 }

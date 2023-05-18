@@ -141,6 +141,78 @@
         <result column="bin64" property="bin64" jdbcType="VARCHAR"/>
     </resultMap>
 
+    <resultMap id="binDataModel" type="org.jeecg.modules.xtw.model.BinDataModel" >
+        <result column="wafer_lot" property="waferLot" jdbcType="VARCHAR"/>
+        <result column="ic_name" property="icName" jdbcType="VARCHAR"/>
+        <result column="sub_lot" property="subLot" jdbcType="VARCHAR"/>
+        <result column="site" property="site" jdbcType="VARCHAR"/>
+        <result column="syl" property="syl" jdbcType="VARCHAR"/>
+        <result column="bin1" property="bin1" jdbcType="VARCHAR"/>
+        <result column="bin2" property="bin2" jdbcType="VARCHAR"/>
+        <result column="bin3" property="bin3" jdbcType="VARCHAR"/>
+        <result column="bin4" property="bin4" jdbcType="VARCHAR"/>
+        <result column="bin5" property="bin5" jdbcType="VARCHAR"/>
+        <result column="bin6" property="bin6" jdbcType="VARCHAR"/>
+        <result column="bin7" property="bin7" jdbcType="VARCHAR"/>
+        <result column="bin8" property="bin8" jdbcType="VARCHAR"/>
+        <result column="bin9" property="bin9" jdbcType="VARCHAR"/>
+        <result column="bin10" property="bin10" jdbcType="VARCHAR"/>
+        <result column="bin11" property="bin11" jdbcType="VARCHAR"/>
+        <result column="bin12" property="bin12" jdbcType="VARCHAR"/>
+        <result column="bin13" property="bin13" jdbcType="VARCHAR"/>
+        <result column="bin14" property="bin14" jdbcType="VARCHAR"/>
+        <result column="bin15" property="bin15" jdbcType="VARCHAR"/>
+        <result column="bin16" property="bin16" jdbcType="VARCHAR"/>
+        <result column="bin17" property="bin17" jdbcType="VARCHAR"/>
+        <result column="bin18" property="bin18" jdbcType="VARCHAR"/>
+        <result column="bin19" property="bin19" jdbcType="VARCHAR"/>
+        <result column="bin20" property="bin20" jdbcType="VARCHAR"/>
+        <result column="bin21" property="bin21" jdbcType="VARCHAR"/>
+        <result column="bin22" property="bin22" jdbcType="VARCHAR"/>
+        <result column="bin23" property="bin23" jdbcType="VARCHAR"/>
+        <result column="bin24" property="bin24" jdbcType="VARCHAR"/>
+        <result column="bin25" property="bin25" jdbcType="VARCHAR"/>
+        <result column="bin26" property="bin26" jdbcType="VARCHAR"/>
+        <result column="bin27" property="bin27" jdbcType="VARCHAR"/>
+        <result column="bin28" property="bin28" jdbcType="VARCHAR"/>
+        <result column="bin29" property="bin29" jdbcType="VARCHAR"/>
+        <result column="bin30" property="bin30" jdbcType="VARCHAR"/>
+        <result column="bin31" property="bin31" jdbcType="VARCHAR"/>
+        <result column="bin32" property="bin32" jdbcType="VARCHAR"/>
+        <result column="bin33" property="bin33" jdbcType="VARCHAR"/>
+        <result column="bin34" property="bin34" jdbcType="VARCHAR"/>
+        <result column="bin35" property="bin35" jdbcType="VARCHAR"/>
+        <result column="bin36" property="bin36" jdbcType="VARCHAR"/>
+        <result column="bin37" property="bin37" jdbcType="VARCHAR"/>
+        <result column="bin38" property="bin38" jdbcType="VARCHAR"/>
+        <result column="bin39" property="bin39" jdbcType="VARCHAR"/>
+        <result column="bin40" property="bin40" jdbcType="VARCHAR"/>
+        <result column="bin41" property="bin41" jdbcType="VARCHAR"/>
+        <result column="bin42" property="bin42" jdbcType="VARCHAR"/>
+        <result column="bin43" property="bin43" jdbcType="VARCHAR"/>
+        <result column="bin44" property="bin44" jdbcType="VARCHAR"/>
+        <result column="bin45" property="bin45" jdbcType="VARCHAR"/>
+        <result column="bin46" property="bin46" jdbcType="VARCHAR"/>
+        <result column="bin47" property="bin47" jdbcType="VARCHAR"/>
+        <result column="bin48" property="bin48" jdbcType="VARCHAR"/>
+        <result column="bin49" property="bin49" jdbcType="VARCHAR"/>
+        <result column="bin50" property="bin50" jdbcType="VARCHAR"/>
+        <result column="bin51" property="bin51" jdbcType="VARCHAR"/>
+        <result column="bin52" property="bin52" jdbcType="VARCHAR"/>
+        <result column="bin53" property="bin53" jdbcType="VARCHAR"/>
+        <result column="bin54" property="bin54" jdbcType="VARCHAR"/>
+        <result column="bin55" property="bin55" jdbcType="VARCHAR"/>
+        <result column="bin56" property="bin56" jdbcType="VARCHAR"/>
+        <result column="bin57" property="bin57" jdbcType="VARCHAR"/>
+        <result column="bin58" property="bin58" jdbcType="VARCHAR"/>
+        <result column="bin59" property="bin59" jdbcType="VARCHAR"/>
+        <result column="bin60" property="bin60" jdbcType="VARCHAR"/>
+        <result column="bin61" property="bin61" jdbcType="VARCHAR"/>
+        <result column="bin62" property="bin62" jdbcType="VARCHAR"/>
+        <result column="bin63" property="bin63" jdbcType="VARCHAR"/>
+        <result column="bin64" property="bin64" jdbcType="VARCHAR"/>
+    </resultMap>
+
     <select id="querySYLList" parameterType="String" resultMap="subLotBinModel">
         select
         xtr.wafer_lot,
@@ -314,4 +386,98 @@
         group by xtr.ic_name, xtr.wafer_lot
     </select>
 
+
+    <select id="queryBinDatas" parameterType="String" resultMap="waferLotBinModel">
+        select
+            a.wafer_lot,
+            a.ic_name,
+            a.sub_lot,
+            b.site,
+            b.syl,
+            b.bin1,
+            b.bin2,
+            b.bin3,
+            b.bin4,
+            b.bin5,
+            b.bin6,
+            b.bin7,
+            b.bin8,
+            b.bin9,
+            b.bin10,
+            b.bin11,
+            b.bin12,
+            b.bin13,
+            b.bin14,
+            b.bin15,
+            b.bin16,
+            b.bin17,
+            b.bin18,
+            b.bin19,
+            b.bin20,
+            b.bin21,
+            b.bin22,
+            b.bin23,
+            b.bin24,
+            b.bin25,
+            b.bin26,
+            b.bin27,
+            b.bin28,
+            b.bin29,
+            b.bin30,
+            b.bin31,
+            b.bin32,
+            b.bin33,
+            b.bin34,
+            b.bin35,
+            b.bin36,
+            b.bin37,
+            b.bin38,
+            b.bin39,
+            b.bin40,
+            b.bin41,
+            b.bin42,
+            b.bin43,
+            b.bin44,
+            b.bin45,
+            b.bin46,
+            b.bin47,
+            b.bin48,
+            b.bin49,
+            b.bin50,
+            b.bin51,
+            b.bin52,
+            b.bin53,
+            b.bin54,
+            b.bin55,
+            b.bin56,
+            b.bin57,
+            b.bin58,
+            b.bin59,
+            b.bin60,
+            b.bin61,
+            b.bin62,
+            b.bin63,
+            b.bin64
+        from
+            xtw_test_record a,
+            xtw_test_bin_detail b
+        where
+            a.id = b.test_record_id
+        <if test="icName != null and icName != ''">
+            and a.ic_name = #{icName}
+        </if>
+        <if test="waferLot != null and waferLot != ''">
+            and a.wafer_lot = #{waferLot}
+        </if>
+        <if test="from != null and from != ''">
+            <![CDATA[ AND a.file_date >= #{from} ]]>
+        </if>
+        <if test="to != null and to != ''">
+            <![CDATA[ AND a.file_date <= #{to} ]]>
+        </if>
+        order by
+            a.file_date desc,
+            a.file_name asc,
+            b.site asc
+    </select>
 </mapper>
