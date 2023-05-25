@@ -214,11 +214,13 @@ public class TestBinDetailController extends JeecgController<TestBinDetail, ITes
                                           @RequestParam(name = "icName", required = false) String icName,
                                           @RequestParam(name = "from", required = false) String from,
                                           @RequestParam(name = "to", required = false) String to) {
-        List sylList = this.testBinDetailService.findSYL(waferLot, icName, from, to);
+        List sylList = this.testBinDetailService.getBinDatas(waferLot, icName, from, to);
         JimuResult result = JimuResult.ok(sylList);
         result.setCount(sylList.size());
         return result;
     }
+
+
 
 
 }

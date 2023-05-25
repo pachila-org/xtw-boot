@@ -10,6 +10,18 @@
         <result column="sample_amount" property="value" jdbcType="INTEGER"/>
     </resultMap>
 
+    <resultMap id="distributionDetailModel" type="org.jeecg.modules.xtw.model.DistributionDetailModel" >
+        <result column="ic_name" property="icName" jdbcType="VARCHAR"/>
+        <result column="wafer_lot" property="waferLot" jdbcType="VARCHAR"/>
+        <result column="sub_lot" property="subLot" jdbcType="VARCHAR"/>
+        <result column="site" property="site" jdbcType="VARCHAR"/>
+        <result column="test_item" property="testItem" jdbcType="VARCHAR"/>
+        <result column="section_min" property="sectionMin" jdbcType="FLOAT"/>
+        <result column="section_max" property="sectionMax" jdbcType="FLOAT"/>
+        <result column="section_Rate" property="sectionRate" jdbcType="FLOAT"/>
+        <result column="sample_amount" property="sampleAmount" jdbcType="INTEGER"/>
+    </resultMap>
+
     <select id="distributionStatistics" parameterType="String" resultMap="distributionStatisticsModel">
         select
             xtr.wafer_lot ,
@@ -24,23 +36,55 @@
         where xtr.wafer_lot = #{waferLot}
             and xtr.ic_name = #{icName}
             and xtd.test_item = #{testItem}
-        <if test="site != null and site != ''">
-            and xtd.site = #{site}
+        <if test="sites.length > 0">
+            and xtd.site in
+            <foreach collection="sites" item="item" open="(" close=")" separator="," >#{item}</foreach>
         </if>
         <if test="testId != null and testId != ''">
             and xtr.test_id = #{testId}
         </if>
-        <if test="site != null and site != ''">
-            and xtd.site = #{site}
-        </if>
         <if test="dateFrom != null and dateFrom != ''">
-            and xtr.file_date >= #{dateFrom}
+            <![CDATA[ and xtr.file_date >= #{dateFrom} ]]>
         </if>
         <if test="dateTo != null and dateTo != ''">
             <![CDATA[ and xtr.file_date <= #{dateTo} ]]>
         </if>
         group by xtr.wafer_lot, xtr.ic_name, xtd.test_item, xtd.section_min
         order by xtd.section_min asc
+    </select>
+
+    <select id="distributionDetail" parameterType="String" resultMap="distributionDetailModel">
+        select
+            xtr.wafer_lot ,
+            xtr.ic_name ,
+            xtr.sub_lot ,
+            xtd.test_item,
+            xtd.site,
+            xtd.section_min,
+            xtd.section_max,
+            xtd.section_rate,
+            xtd.sample_amount
+        from
+            xtw_test_distribtion xtd
+        left join xtw_test_record xtr on
+            xtd.test_record_id = xtr.id
+        where xtr.wafer_lot = #{waferLot}
+        and xtr.ic_name = #{icName}
+        and xtd.test_item = #{testItem}
+        <if test="sites.length > 0">
+            and xtd.site in
+            <foreach collection="sites" item="item" open="(" close=")" separator="," >#{item}</foreach>
+        </if>
+        <if test="testId != null and testId != ''">
+            and xtr.test_id = #{testId}
+        </if>
+        <if test="dateFrom != null and dateFrom != ''">
+            <![CDATA[ and xtr.file_date >= #{dateFrom} ]]>
+        </if>
+        <if test="dateTo != null and dateTo != ''">
+            <![CDATA[ and xtr.file_date <= #{dateTo} ]]>
+        </if>
+        order by xtd.site asc, xtd.section_min asc
     </select>
 
 

@@ -8,6 +8,9 @@ public class MathUtils {
 
     // 将maxValue 转化为一个最近的整数，如 99 转换成100， 101 转换成 200， 1001 转换成 1100， 10001 转换成 11000
     public static Integer getNearestInteger(Integer maxValue) {
+        // 先将maxValue 变成原值的1.1倍
+        maxValue = (int) (maxValue * 1.1);
+
         if (maxValue < 10) {
             return new Integer(10);
         }

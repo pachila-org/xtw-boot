@@ -17,4 +17,6 @@ public interface IXtwTestDistribtionService extends IService<XtwTestDistribtion>
 
     List distributionStatistics(String waferLot, String icName, String testItem, String testId, String site, String dateFrom, String dateTo);
 
-}
+    List distributionDetail(String waferLot, String icName, String testItem, String testId, String site, String dateFrom, String dateTo);
+
+    }

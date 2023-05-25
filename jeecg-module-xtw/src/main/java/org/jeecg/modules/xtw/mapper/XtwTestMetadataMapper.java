@@ -1,5 +1,6 @@
 package org.jeecg.modules.xtw.mapper;
 
+import io.lettuce.core.dynamic.annotation.Param;
 import org.jeecg.modules.xtw.entity.XtwTestMetadata;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -13,6 +14,5 @@ import java.util.List;
  */
 public interface XtwTestMetadataMapper extends BaseMapper<XtwTestMetadata> {
 
-    List<XtwTestMetadata> findUplimitAndDownlimitByTestItem(String waferLot, String icName, String testItem);
-
+    List<XtwTestMetadata> findUplimitAndDownlimitByTestItem(@Param("waferLot")String waferLot, @Param("icName")String icName, @Param("testItem")String testItem);
 }

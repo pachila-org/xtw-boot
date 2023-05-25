@@ -162,18 +162,6 @@ public class XtwTestDistribtionController extends JeecgController<XtwTestDistrib
         return super.importExcel(request, response, XtwTestDistribtion.class);
     }
 
-//	@ApiOperation("获取某个批次某个项目的数据分布明细情况")
-//	@RequestMapping(value = "/detailDistribution", method = RequestMethod.POST)
-//	public JimuResult<?> detailDistribution(@RequestParam(name = "waferLot", required = true) String waferLot,
-//											@RequestParam(name = "icName", required = true) String icName,
-//											@RequestParam(name = "subLot", required = true) String subLog,
-//											@RequestParam(name = "testItem", required = true) String testItem) {
-//		List result = xtwTestDistribtionService.detailDistribution(waferLot, icName, subLog, testItem);
-//		JimuResult jimuResult = JimuResult.ok(result)
-//		jimuResult.setCount(result.size());
-//		return jimuResult;
-//	}
-
 	@ApiOperation("获取指定大批次与产品下的数据分布情况")
 	@RequestMapping(value = "/statistics", method = RequestMethod.POST)
 	public JimuResult<?> distributionStatistics(@RequestParam(name = "waferLot", required = true) String waferLot,
@@ -188,5 +176,32 @@ public class XtwTestDistribtionController extends JeecgController<XtwTestDistrib
 		jimuResult.setCount(result.size());
 		return jimuResult;
 	}
+
+
+	@ApiOperation("获取指定大批次与产品下的数据分布明细情况")
+	@RequestMapping(value = "/details", method = RequestMethod.POST)
+	public JimuResult<?> distributionDetails(@RequestParam(name = "waferLot", required = true) String waferLot,
+												@RequestParam(name = "icName", required = true) String icName,
+												@RequestParam(name = "testItem", required = true) String testItem,
+												@RequestParam(name = "testId", required = false) String testId,
+												@RequestParam(name = "site", required = false) String site,
+												@RequestParam(name = "dateFrom", required = false) String dateFrom,
+												@RequestParam(name = "dateTo", required = false) String dateTo) {
+		List result = xtwTestDistribtionService.distributionDetail(waferLot, icName, testItem, testId, site, dateFrom, dateTo);
+		// 输出result
+//		System.out.println(result);
+
+		JimuResult jimuResult = JimuResult.ok(result);
+		jimuResult.setCount(result.size());
+		return jimuResult;
+	}
+
+	@ApiOperation("获取Site的下拉字典")
+	@RequestMapping(value = "/sites", method = RequestMethod.GET)
+	public String getSiteDict() {
+		String siteDict = "[{\"text\":\"1\",\"value\":\"1\"},{\"text\":\"2\",\"value\":\"2\"},{\"text\":\"3\",\"value\":\"3\"},{\"text\":\"4\",\"value\":\"4\"}]";
+		return siteDict;
+	}
+
 
 }

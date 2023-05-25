@@ -51,4 +51,11 @@ public class SylModel {
      */
     private BigDecimal controlLine;
 
+    public String getValid() {
+        // 如果 yield 在 mean - 3xgm 和 mean + 3xgm 之间，则为有效数据 而且 yield >= control line
+        if(yield != null && robustMean != null && meanMinus3xgm != null && meanPlus3xgm != null && controlLine != null
+                && yield.compareTo(meanMinus3xgm) >= 0 && yield.compareTo(meanPlus3xgm) <= 0 && yield.compareTo(controlLine) >= 0)
+            return "1";
+        return "0";
+    }
 }
