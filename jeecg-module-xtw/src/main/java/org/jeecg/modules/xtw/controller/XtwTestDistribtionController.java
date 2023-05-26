@@ -170,8 +170,9 @@ public class XtwTestDistribtionController extends JeecgController<XtwTestDistrib
 												@RequestParam(name = "testId", required = false) String testId,
 												@RequestParam(name = "site", required = false) String site,
 												@RequestParam(name = "dateFrom", required = false) String dateFrom,
-												@RequestParam(name = "dateTo", required = false) String dateTo) {
-		List result = xtwTestDistribtionService.distributionStatistics(waferLot, icName, testItem, testId, site, dateFrom, dateTo);
+												@RequestParam(name = "dateTo", required = false) String dateTo,
+												@RequestParam(name = "groups", required = false) int groups) {
+		List result = xtwTestDistribtionService.distributionStatistics(waferLot, icName, testItem, testId, site, dateFrom, dateTo, groups);
 		JimuResult jimuResult = JimuResult.ok(result);
 		jimuResult.setCount(result.size());
 		return jimuResult;
@@ -188,19 +189,10 @@ public class XtwTestDistribtionController extends JeecgController<XtwTestDistrib
 												@RequestParam(name = "dateFrom", required = false) String dateFrom,
 												@RequestParam(name = "dateTo", required = false) String dateTo) {
 		List result = xtwTestDistribtionService.distributionDetail(waferLot, icName, testItem, testId, site, dateFrom, dateTo);
-		// 输出result
-//		System.out.println(result);
 
 		JimuResult jimuResult = JimuResult.ok(result);
 		jimuResult.setCount(result.size());
 		return jimuResult;
-	}
-
-	@ApiOperation("获取Site的下拉字典")
-	@RequestMapping(value = "/sites", method = RequestMethod.GET)
-	public String getSiteDict() {
-		String siteDict = "[{\"text\":\"1\",\"value\":\"1\"},{\"text\":\"2\",\"value\":\"2\"},{\"text\":\"3\",\"value\":\"3\"},{\"text\":\"4\",\"value\":\"4\"}]";
-		return siteDict;
 	}
 
 

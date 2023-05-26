@@ -6,7 +6,8 @@
         <result column="wafer_lot" property="waferLot" jdbcType="VARCHAR"/>
         <result column="ic_name" property="icName" jdbcType="VARCHAR"/>
         <result column="test_item" property="testItem" jdbcType="VARCHAR"/>
-        <result column="section_min" property="name" jdbcType="FLOAT"/>
+        <result column="section_min" property="sectionMin" jdbcType="FLOAT"/>
+        <result column="section_max" property="sectionMax" jdbcType="FLOAT"/>
         <result column="sample_amount" property="value" jdbcType="INTEGER"/>
     </resultMap>
 
@@ -28,6 +29,7 @@
             xtr.ic_name ,
             xtd.test_item,
             xtd.section_min,
+            xtd.section_max,
             sum(xtd.sample_amount) as sample_amount
         from
             xtw_test_distribtion xtd
@@ -49,7 +51,7 @@
         <if test="dateTo != null and dateTo != ''">
             <![CDATA[ and xtr.file_date <= #{dateTo} ]]>
         </if>
-        group by xtr.wafer_lot, xtr.ic_name, xtd.test_item, xtd.section_min
+        group by xtr.wafer_lot, xtr.ic_name, xtd.test_item, xtd.section_min, xtd.section_max
         order by xtd.section_min asc
     </select>
 

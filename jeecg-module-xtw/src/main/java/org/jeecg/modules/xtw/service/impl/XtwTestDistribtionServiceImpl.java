@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -35,7 +36,19 @@ public class XtwTestDistribtionServiceImpl extends ServiceImpl<XtwTestDistribtio
     private XtwSystemConfigMapper systemConfigMapper;
 
     @Override
-    public List distributionStatistics(String waferLot, String icName, String testItem, String testId, String site, String dateFrom, String dateTo) {
+    public List distributionStatistics(String waferLot, String icName, String testItem, String testId, String site, String dateFrom, String dateTo, int groupSize) {
+        // 输出参数
+        System.out.println("distributionStatistics#waferLot: " + waferLot);
+        System.out.println("distributionStatistics#icName: " + icName);
+        System.out.println("distributionStatistics#testItem: " + testItem);
+        System.out.println("distributionStatistics#testId: " + testId);
+        System.out.println("distributionStatistics#site: " + site);
+        System.out.println("distributionStatistics#dateFrom: " + dateFrom);
+        System.out.println("distributionStatistics#dateTo: " + dateTo);
+        System.out.println("distributionStatistics#groupSize: " + groupSize);
+
+        List<DistributionStatisticsModel> result = new ArrayList<>();
+
         // site 是一个由,分割的字符串，则将其转换成一个数组 sites
         String[] sites = new String[]{};
         if (site != null && !"".equals(site)) {
@@ -47,7 +60,7 @@ public class XtwTestDistribtionServiceImpl extends ServiceImpl<XtwTestDistribtio
         List<DistributionStatisticsModel> datas = testDistribtionMapper.distributionStatistics(waferLot, icName, testItem, testId, sites, dateFrom, dateTo);
 
         // 去除datas集合中value为0的数据
-//        datas.removeIf(data -> data.getValue() == 0);
+        datas.removeIf(data -> data.getValue() == 0);
 
         // 获取datas集合value中最大的值
         Integer maxValue = 0;
@@ -62,80 +75,111 @@ public class XtwTestDistribtionServiceImpl extends ServiceImpl<XtwTestDistribtio
         // 在数据集中插入标准的参照数据
         List<XtwTestMetadata> metadataList = testMetadataMapper.findUplimitAndDownlimitByTestItem(waferLot, icName, testItem);
         if (metadataList == null || metadataList.size() == 0) {
-            return datas;
+            return result;
         }
         XtwTestMetadata metadata = metadataList.get(0);
 
         XtwSystemConfig alertConfig = systemConfigMapper.findConfig("ALERT_DATA_RATE");
+        XtwSystemConfig exceptConfig = systemConfigMapper.findConfig("EXCEPTION_DATA_RATE");
         BigDecimal alertDataRate = new BigDecimal(alertConfig.getConfigValue());
-
-        // 输出 alertConfig
-        System.out.println("alertConfig ALERT_DATA_RATE: " + alertConfig.getConfigValue());
+        BigDecimal exceptDataRate = new BigDecimal(alertConfig.getConfigValue());
 
         BigDecimal uplimit = new BigDecimal(metadata.getUplimit());
         BigDecimal downlimit = new BigDecimal(metadata.getDownlimit());
         BigDecimal interval = uplimit.subtract(downlimit);
         BigDecimal alertInterval = interval.multiply(alertDataRate.divide(new BigDecimal(100)));
+        BigDecimal exceptInterval = interval.multiply(exceptDataRate.divide(new BigDecimal(100)));
         BigDecimal mean = MathUtils.mean(uplimit, downlimit);
         BigDecimal uspec = mean.add(alertInterval);
         BigDecimal lspec = mean.subtract(alertInterval);
+        BigDecimal newUplimt = mean.add(alertInterval);
+        BigDecimal newDownlimit = mean.subtract(alertInterval);
 
-        // 输出 uplimit, uspec,  mean, lspec, downlimit
-//        System.out.println("uplimit: " + uplimit);
-//        System.out.println("uspec: " + uspec);
-//        System.out.println("mean: " + mean);
-//        System.out.println("lspec: " + lspec);
-//        System.out.println("downlimit: " + downlimit);
+        // 输出 newUplimt 和 newDownlimit
+        System.out.println("distributionStatistics#newUplimt: " + newUplimt);
+        System.out.println("distributionStatistics#newDownlimit: " + newDownlimit);
+
+        // 准备插入 数据
+        BigDecimal step = newUplimt.subtract(newDownlimit).divide(new BigDecimal(groupSize));
+
+        for (int i = 0; i < groupSize; i++) {
+            DistributionStatisticsModel data = new DistributionStatisticsModel();
+            data.setWaferLot(waferLot);
+            data.setIcName(icName);
+            data.setTestItem(testItem);
+            data.setSectionMin(newDownlimit.add(step.multiply(new BigDecimal(i))));
+            data.setSectionMax(newDownlimit.add(step.multiply(new BigDecimal(i+1))));
+            data.setValue(0);
+//            System.out.println("item data: " + data.getSectionMin() + " - " + data.getSectionMax());
+            result.add(data);
+        }
+
+        // 遍历datas集合，比较datas中每个item，如果它的sectionMin 和 sectionMax 和 result中每一个sectionMin 和 setionMax 相等或者范围之内 ，则将datas中的value值添加到给result中的value
+        for (DistributionStatisticsModel data : datas) {
+//            System.out.println("matched for data: " + data.getSectionMin() + " - " + data.getSectionMax());
+            boolean matched = false;
+            for (DistributionStatisticsModel item : result) {
+                //System.out.println("current item: " + item.getSectionMin() + " - " + item.getSectionMax());
+                if (data.getSectionMin().compareTo(item.getSectionMin()) >= 0 && data.getSectionMin().compareTo(item.getSectionMax()) <= 0) {
+                    item.setValue(item.getValue() + data.getValue());
+                    matched = true;
+                    continue;
+                }
+            }
+            if (!matched) {
+                System.out.println("data: " + data.getSectionMin() + " - " + data.getSectionMax() + " not matched");
+            } else {
+                System.out.println("data: " + data.getSectionMin() + " - " + data.getSectionMax() + " matched");
+            }
+        }
 
         // uplimit data insert
         DistributionStatisticsModel uplimitData = new DistributionStatisticsModel();
         uplimitData.setWaferLot(waferLot);
         uplimitData.setIcName(icName);
         uplimitData.setTestItem(testItem);
-        uplimitData.setName(uplimit);
+        uplimitData.setSectionMin(uplimit);
         uplimitData.setValue(maxValue);
-        datas.add(uplimitData);
+        result.add(uplimitData);
 
         // downlimit data insert
         DistributionStatisticsModel downlimitData = new DistributionStatisticsModel();
         downlimitData.setWaferLot(waferLot);
         downlimitData.setIcName(icName);
         downlimitData.setTestItem(testItem);
-        downlimitData.setName(downlimit);
+        downlimitData.setSectionMin(downlimit);
         downlimitData.setValue(maxValue);
-        datas.add(downlimitData);
+        result.add(downlimitData);
 
         // mean  data insert
         DistributionStatisticsModel meanData = new DistributionStatisticsModel();
         meanData.setWaferLot(waferLot);
         meanData.setIcName(icName);
         meanData.setTestItem(testItem);
-        meanData.setName(mean);
+        meanData.setSectionMin(mean);
         meanData.setValue(maxValue);
-        datas.add(meanData);
+        result.add(meanData);
 
         // uspec  data insert
         DistributionStatisticsModel uspecData = new DistributionStatisticsModel();
         uspecData.setWaferLot(waferLot);
         uspecData.setIcName(icName);
         uspecData.setTestItem(testItem);
-        uspecData.setName(uspec);
+        uspecData.setSectionMin(uspec);
         uspecData.setValue(maxValue);
-        datas.add(uspecData);
+        result.add(uspecData);
 
         // lspec  data insert
         DistributionStatisticsModel lspecData = new DistributionStatisticsModel();
         lspecData.setWaferLot(waferLot);
         lspecData.setIcName(icName);
         lspecData.setTestItem(testItem);
-        lspecData.setName(lspec);
+        lspecData.setSectionMin(lspec);
         lspecData.setValue(maxValue);
-        datas.add(lspecData);
+        result.add(lspecData);
 
-        // Sort modelList by Name property in ascending order
-//        Collections.sort(datas, Comparator.comparing(DistributionStatisticsModel::getName));
-        datas.sort(Comparator.comparing(DistributionStatisticsModel::getName));
-        return datas;
+        result.sort(Comparator.comparing(DistributionStatisticsModel::getName));
+        return result;
     }
 
 

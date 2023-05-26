@@ -20,9 +20,16 @@ public class DistributionStatisticsModel {
     private String testItem;
 
     /** 区间最小值*/
-    private BigDecimal name;
+    private BigDecimal sectionMin;
+
+    /** 区间最大值*/
+    private BigDecimal sectionMax;
 
     /** 样本数量 */
     private Integer value;
+
+    public BigDecimal getName() {
+        return sectionMin;
+    }
 
 }
