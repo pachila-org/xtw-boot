@@ -213,19 +213,19 @@ public class XtwTestDistribtionServiceImpl extends ServiceImpl<XtwTestDistribtio
         }
         XtwTestMetadata metadata = metadataList.get(0);
 
-//        XtwSystemConfig alertConfig = systemConfigMapper.findConfig("ALERT_DATA_RATE");
+        XtwSystemConfig alertConfig = systemConfigMapper.findConfig("ALERT_DATA_RATE");
         XtwSystemConfig exceptConfig = systemConfigMapper.findConfig("EXCEPTION_DATA_RATE");
-//        BigDecimal alertDataRate = new BigDecimal(alertConfig.getConfigValue());
+        BigDecimal alertDataRate = new BigDecimal(alertConfig.getConfigValue());
         BigDecimal exceptDataRate = new BigDecimal(exceptConfig.getConfigValue());
 
         BigDecimal uplimit = new BigDecimal(metadata.getUplimit());
         BigDecimal downlimit = new BigDecimal(metadata.getDownlimit());
         BigDecimal interval = uplimit.subtract(downlimit);
-//        BigDecimal alertInterval = interval.multiply(alertDataRate.divide(new BigDecimal(100)));
+        BigDecimal alertInterval = interval.multiply(alertDataRate.divide(new BigDecimal(100)));
         BigDecimal exceptInterval = interval.multiply(exceptDataRate.divide(new BigDecimal(100)));
         BigDecimal mean = MathUtils.mean(uplimit, downlimit);
-//        BigDecimal uspec = mean.add(alertInterval);
-//        BigDecimal lspec = mean.subtract(alertInterval);
+        BigDecimal uspec = mean.add(alertInterval);
+        BigDecimal lspec = mean.subtract(alertInterval);
         BigDecimal newUplimt = mean.add(exceptInterval);
         BigDecimal newDownlimit = mean.subtract(exceptInterval);
 
@@ -253,6 +253,8 @@ public class XtwTestDistribtionServiceImpl extends ServiceImpl<XtwTestDistribtio
                     dataItem.setSite(siteitem);
                     dataItem.setSectionMin(newDownlimit.add(step.multiply(new BigDecimal(i))));
                     dataItem.setSectionMax(newDownlimit.add(step.multiply(new BigDecimal(i+1))));
+                    dataItem.setUspec(uspec);
+                    dataItem.setLspec(lspec);
                     dataItem.setSectionRate(dataItem.getSectionMin().subtract(mean).divide(newUplimt.subtract(newDownlimit),4, BigDecimal.ROUND_HALF_UP).doubleValue());
                     // 从datas中找出符合条件的数据, 把其sampleAmount赋值给dataItem
                     DistributionDetailModel findData = findData(datas, subLot, siteitem, dataItem.getSectionMin(), dataItem.getSectionMax());

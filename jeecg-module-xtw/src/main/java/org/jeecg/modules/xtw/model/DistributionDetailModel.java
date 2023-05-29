@@ -33,6 +33,21 @@ public class DistributionDetailModel {
     /**落在该区间的样本量*/
     private java.lang.Integer sampleAmount;
 
+    private BigDecimal uspec;
+    private BigDecimal lspec;
+
+    public String getFocus() {
+        if (sectionMin == null || sectionMax == null) {
+            return "0";
+        }
+        // 如果 sectionMin 在 hspec 和 lspec 中间 则返回1
+        if (sectionMin.compareTo(uspec) <= 0 && sectionMin.compareTo(lspec) >= 0) {
+            return "1";
+        } else {
+            return "0";
+        }
+    }
+
     public Double getSectionRate100() {
         // 保留1位小数
         BigDecimal bg = new BigDecimal(sectionRate*100);
