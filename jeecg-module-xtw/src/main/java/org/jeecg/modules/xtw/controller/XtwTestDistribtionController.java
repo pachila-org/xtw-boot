@@ -187,8 +187,9 @@ public class XtwTestDistribtionController extends JeecgController<XtwTestDistrib
 												@RequestParam(name = "testId", required = false) String testId,
 												@RequestParam(name = "site", required = false) String site,
 												@RequestParam(name = "dateFrom", required = false) String dateFrom,
-												@RequestParam(name = "dateTo", required = false) String dateTo) {
-		List result = xtwTestDistribtionService.distributionDetail(waferLot, icName, testItem, testId, site, dateFrom, dateTo);
+												@RequestParam(name = "dateTo", required = false) String dateTo,
+											    @RequestParam(name = "groups", required = false) int groups) {
+		List result = xtwTestDistribtionService.distributionDetail(waferLot, icName, testItem, testId, site, dateFrom, dateTo, groups);
 
 		JimuResult jimuResult = JimuResult.ok(result);
 		jimuResult.setCount(result.size());

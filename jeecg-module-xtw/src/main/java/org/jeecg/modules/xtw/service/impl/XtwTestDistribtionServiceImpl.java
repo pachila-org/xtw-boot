@@ -73,6 +73,8 @@ public class XtwTestDistribtionServiceImpl extends ServiceImpl<XtwTestDistribtio
         maxValue = MathUtils.getNearestInteger(maxValue);
 
         // 在数据集中插入标准的参照数据
+
+        // 获取当前测试项的上下限（元数据）
         List<XtwTestMetadata> metadataList = testMetadataMapper.findUplimitAndDownlimitByTestItem(waferLot, icName, testItem);
         if (metadataList == null || metadataList.size() == 0) {
             return result;
@@ -82,7 +84,7 @@ public class XtwTestDistribtionServiceImpl extends ServiceImpl<XtwTestDistribtio
         XtwSystemConfig alertConfig = systemConfigMapper.findConfig("ALERT_DATA_RATE");
         XtwSystemConfig exceptConfig = systemConfigMapper.findConfig("EXCEPTION_DATA_RATE");
         BigDecimal alertDataRate = new BigDecimal(alertConfig.getConfigValue());
-        BigDecimal exceptDataRate = new BigDecimal(alertConfig.getConfigValue());
+        BigDecimal exceptDataRate = new BigDecimal(exceptConfig.getConfigValue());
 
         BigDecimal uplimit = new BigDecimal(metadata.getUplimit());
         BigDecimal downlimit = new BigDecimal(metadata.getDownlimit());
@@ -92,16 +94,15 @@ public class XtwTestDistribtionServiceImpl extends ServiceImpl<XtwTestDistribtio
         BigDecimal mean = MathUtils.mean(uplimit, downlimit);
         BigDecimal uspec = mean.add(alertInterval);
         BigDecimal lspec = mean.subtract(alertInterval);
-        BigDecimal newUplimt = mean.add(alertInterval);
-        BigDecimal newDownlimit = mean.subtract(alertInterval);
+        BigDecimal newUplimt = mean.add(exceptInterval);
+        BigDecimal newDownlimit = mean.subtract(exceptInterval);
 
         // 输出 newUplimt 和 newDownlimit
         System.out.println("distributionStatistics#newUplimt: " + newUplimt);
         System.out.println("distributionStatistics#newDownlimit: " + newDownlimit);
 
-        // 准备插入 数据
+        // 准备插入统计数据
         BigDecimal step = newUplimt.subtract(newDownlimit).divide(new BigDecimal(groupSize));
-
         for (int i = 0; i < groupSize; i++) {
             DistributionStatisticsModel data = new DistributionStatisticsModel();
             data.setWaferLot(waferLot);
@@ -110,7 +111,6 @@ public class XtwTestDistribtionServiceImpl extends ServiceImpl<XtwTestDistribtio
             data.setSectionMin(newDownlimit.add(step.multiply(new BigDecimal(i))));
             data.setSectionMax(newDownlimit.add(step.multiply(new BigDecimal(i+1))));
             data.setValue(0);
-//            System.out.println("item data: " + data.getSectionMin() + " - " + data.getSectionMax());
             result.add(data);
         }
 
@@ -184,7 +184,7 @@ public class XtwTestDistribtionServiceImpl extends ServiceImpl<XtwTestDistribtio
 
 
     @Override
-    public List distributionDetail(String waferLot, String icName, String testItem, String testId, String site, String dateFrom, String dateTo) {
+    public List distributionDetail(String waferLot, String icName, String testItem, String testId, String site, String dateFrom, String dateTo, int groupSize) {
         // 输出参数
         System.out.println("distributionDetail#waferLot: " + waferLot);
         System.out.println("distributionDetail#icName: " + icName);
@@ -201,9 +201,87 @@ public class XtwTestDistribtionServiceImpl extends ServiceImpl<XtwTestDistribtio
         }
         System.out.println("distributionDetail#sites: " + sites.length);
 
+        List<DistributionDetailModel> result = new ArrayList<>();
+
         // 根据条件从数据库查询出相应的分布数据
         List<DistributionDetailModel> datas = testDistribtionMapper.distributionDetail(waferLot, icName, testItem, testId, sites, dateFrom, dateTo);
 
-        return datas;
+        // 获取当前测试项的上下限（元数据）
+        List<XtwTestMetadata> metadataList = testMetadataMapper.findUplimitAndDownlimitByTestItem(waferLot, icName, testItem);
+        if (metadataList == null || metadataList.size() == 0) {
+            return result;
+        }
+        XtwTestMetadata metadata = metadataList.get(0);
+
+//        XtwSystemConfig alertConfig = systemConfigMapper.findConfig("ALERT_DATA_RATE");
+        XtwSystemConfig exceptConfig = systemConfigMapper.findConfig("EXCEPTION_DATA_RATE");
+//        BigDecimal alertDataRate = new BigDecimal(alertConfig.getConfigValue());
+        BigDecimal exceptDataRate = new BigDecimal(exceptConfig.getConfigValue());
+
+        BigDecimal uplimit = new BigDecimal(metadata.getUplimit());
+        BigDecimal downlimit = new BigDecimal(metadata.getDownlimit());
+        BigDecimal interval = uplimit.subtract(downlimit);
+//        BigDecimal alertInterval = interval.multiply(alertDataRate.divide(new BigDecimal(100)));
+        BigDecimal exceptInterval = interval.multiply(exceptDataRate.divide(new BigDecimal(100)));
+        BigDecimal mean = MathUtils.mean(uplimit, downlimit);
+//        BigDecimal uspec = mean.add(alertInterval);
+//        BigDecimal lspec = mean.subtract(alertInterval);
+        BigDecimal newUplimt = mean.add(exceptInterval);
+        BigDecimal newDownlimit = mean.subtract(exceptInterval);
+
+        // 生成分布数据
+        // 找出datas的sublot list
+        List<String> subLotList = new ArrayList<>();
+        for (DistributionDetailModel data : datas) {
+            if (!subLotList.contains(data.getSubLot())) {
+                subLotList.add(data.getSubLot());
+            }
+        }
+
+        for (String subLot : subLotList) {
+            BigDecimal step = newUplimt.subtract(newDownlimit).divide(new BigDecimal(groupSize));
+            for (int i = 0; i < groupSize; i++) {
+                if (sites.length == 0) {
+                    sites = new String[]{"1", "2", "3", "4"};
+                }
+                for (String siteitem: sites) {
+                    DistributionDetailModel dataItem = new DistributionDetailModel();
+                    dataItem.setWaferLot(waferLot);
+                    dataItem.setIcName(icName);
+                    dataItem.setTestItem(testItem);
+                    dataItem.setSubLot(subLot);
+                    dataItem.setSite(siteitem);
+                    dataItem.setSectionMin(newDownlimit.add(step.multiply(new BigDecimal(i))));
+                    dataItem.setSectionMax(newDownlimit.add(step.multiply(new BigDecimal(i+1))));
+                    dataItem.setSectionRate(dataItem.getSectionMin().subtract(mean).divide(newUplimt.subtract(newDownlimit),4, BigDecimal.ROUND_HALF_UP).doubleValue());
+                    // 从datas中找出符合条件的数据, 把其sampleAmount赋值给dataItem
+                    DistributionDetailModel findData = findData(datas, subLot, siteitem, dataItem.getSectionMin(), dataItem.getSectionMax());
+                    if (findData != null) {
+                        dataItem.setSampleAmount(findData.getSampleAmount());
+                    } else {
+                        // 如果没有找到，则sampleAmount为0
+                        dataItem.setSampleAmount(0);
+                    }
+                    result.add(dataItem);
+                }
+            }
+        }
+
+        return result;
     }
+
+
+    /**
+     * 从datas中找出符合条件的数据
+     */
+    private DistributionDetailModel findData(List<DistributionDetailModel> datas, String subLot, String site, BigDecimal sectionMin, BigDecimal sectionMax) {
+        for (DistributionDetailModel item : datas) {
+            if (item.getSubLot().equals(subLot) && item.getSite().equals(site)
+                    && item.getSectionMin().compareTo(sectionMin) >= 0  && item.getSectionMin().compareTo(sectionMax) <= 0) {
+                return item;
+            }
+        }
+        return null;
+    }
+
 }
