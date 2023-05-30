@@ -16,9 +16,7 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * @Description: xtw_test_distribtion
@@ -230,15 +228,17 @@ public class XtwTestDistribtionServiceImpl extends ServiceImpl<XtwTestDistribtio
         BigDecimal newDownlimit = mean.subtract(exceptInterval);
 
         // 生成分布数据
-        // 找出datas的sublot list
-        List<String> subLotList = new ArrayList<>();
+        // 找出datas的sublot list 以及对应的testId
+        Map<String, String> subLotListMap = new HashMap<>();
         for (DistributionDetailModel data : datas) {
-            if (!subLotList.contains(data.getSubLot())) {
-                subLotList.add(data.getSubLot());
+            String key = data.getSubLot();
+            if (!subLotListMap.containsKey(key)) {
+                subLotListMap.put(key, data.getTestId());
             }
         }
 
-        for (String subLot : subLotList) {
+
+        for (String subLot : subLotListMap.keySet()) {
             BigDecimal step = newUplimt.subtract(newDownlimit).divide(new BigDecimal(groupSize));
             for (int i = 0; i < groupSize; i++) {
                 if (sites.length == 0) {
@@ -250,6 +250,7 @@ public class XtwTestDistribtionServiceImpl extends ServiceImpl<XtwTestDistribtio
                     dataItem.setIcName(icName);
                     dataItem.setTestItem(testItem);
                     dataItem.setSubLot(subLot);
+                    dataItem.setTestId(subLotListMap.get(subLot));
                     dataItem.setSite(siteitem);
                     dataItem.setSectionMin(newDownlimit.add(step.multiply(new BigDecimal(i))));
                     dataItem.setSectionMax(newDownlimit.add(step.multiply(new BigDecimal(i+1))));

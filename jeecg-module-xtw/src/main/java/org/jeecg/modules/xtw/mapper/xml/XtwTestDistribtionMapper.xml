@@ -17,6 +17,7 @@
         <result column="sub_lot" property="subLot" jdbcType="VARCHAR"/>
         <result column="site" property="site" jdbcType="VARCHAR"/>
         <result column="test_item" property="testItem" jdbcType="VARCHAR"/>
+        <result column="test_id" property="testId" jdbcType="VARCHAR"/>
         <result column="section_min" property="sectionMin" jdbcType="FLOAT"/>
         <result column="section_max" property="sectionMax" jdbcType="FLOAT"/>
         <result column="section_Rate" property="sectionRate" jdbcType="FLOAT"/>
@@ -60,6 +61,7 @@
             xtr.wafer_lot ,
             xtr.ic_name ,
             xtr.sub_lot ,
+            xtr.test_id ,
             xtd.test_item,
             xtd.site,
             xtd.section_min,

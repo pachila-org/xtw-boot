@@ -21,6 +21,9 @@ public class DistributionDetailModel {
     /** 测试项目 */
     private String testItem;
 
+    /** 测试机号 */
+    private String testId;
+
     /** SITE */
     private java.lang.String site;
 
@@ -52,5 +55,13 @@ public class DistributionDetailModel {
         // 保留1位小数
         BigDecimal bg = new BigDecimal(sectionRate*100);
         return bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
+
+    public String getWrapperWaferLot(){
+        return waferLot + "-" + icName;
+    }
+
+    public String getWrapperSubLot(){
+        return subLot + "\n" + testId;
     }
 }
