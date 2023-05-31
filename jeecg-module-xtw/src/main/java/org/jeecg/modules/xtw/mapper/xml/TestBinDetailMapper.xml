@@ -387,7 +387,7 @@
     </select>
 
 
-    <select id="queryBinDatas" parameterType="String" resultMap="waferLotBinModel">
+    <select id="queryBinDatas" parameterType="String" resultMap="binDataModel">
         select
             a.wafer_lot,
             a.ic_name,
